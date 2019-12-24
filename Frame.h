@@ -24,7 +24,12 @@
 
 // ----------------------------------------------------------- exported types --
 
-/* nothing */
+class Frame {
+private:
+public:
+  Frame();
+  void draw();
+};
 
 // ------------------------------------------------------- exported variables --
 

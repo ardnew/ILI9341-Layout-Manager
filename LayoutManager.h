@@ -14,14 +14,7 @@
 
 #include <Arduino.h>
 
-#include <Adafruit_ILI9341.h>
-#include <XPT2046_Calibrated.h>
-
 #include "Screen.h"
-#include "Layer.h"
-#include "Panel.h"
-#include "Field.h"
-#include "Frame.h"
 
 // ------------------------------------------------------------------ defines --
 
@@ -35,15 +28,18 @@
 
 class LayoutManager {
 private:
-  Adafruit_ILI9341 *_tft;
-  XPT2046_Calibrated *_ts;
-
-  Screen *_screen;
+  Screen _screen;
+  bool initScreen();
 
 public:
-  LayoutManager(void);
-  initDisplay(uint16_t csPin, uint16_t dcPin);
-  initTouchScreen(uint16_t csPin, uint16_t irqPin);
+  LayoutManager(
+    uint16_t const tftCSPin, uint16_t const tftDCPin,
+    uint16_t const tsCSPin, uint16_t const tsIRQPin,
+    uint16_t const width, uint16_t const height,
+    ScreenOrientation const orientation
+  );
+  bool begin();
+  void draw();
 };
 
 // ------------------------------------------------------- exported variables --

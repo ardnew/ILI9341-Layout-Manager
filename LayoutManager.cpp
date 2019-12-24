@@ -37,24 +37,35 @@
 
 // ------------------------------------------------------- exported functions --
 
-LayoutManager::LayoutManager(void):
-    _tft(NULL),
-    _ts(NULL),
-    _screen(new Screen())
+LayoutManager::LayoutManager(
+    uint16_t const tftCSPin, uint16_t const tftDCPin,
+    uint16_t const tsCSPin, uint16_t const tsIRQPin,
+    uint16_t const width, uint16_t const height,
+    ScreenOrientation const orientation
+):
+  _screen(Screen(
+      tftCSPin, tftDCPin, tsCSPin, tsIRQPin, width, height, orientation
+  ))
 {
   /* nothing */
 }
 
-LayoutManager::initDisplay(uint16_t csPin, uint16_t dcPin)
+bool LayoutManager::begin()
 {
-  _tft = new Adafruit_ILI9341(csPin, dcPin);
+  if (!initScreen())
+    { return false; }
+
+  return true;
 }
 
-LayoutManager::initTouchScreen(uint16_t csPin, uint16_t irqPin)
+void LayoutManager::draw()
 {
-  _ts = new XPT2046_Calibrated(csPin, irqPin);
+  _screen.draw();
 }
 
 // -------------------------------------------------------- private functions --
 
-/* nothing */
+bool LayoutManager::initScreen()
+{
+  return _screen.begin();
+}

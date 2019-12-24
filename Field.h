@@ -24,7 +24,12 @@
 
 // ----------------------------------------------------------- exported types --
 
-/* nothing */
+class Field {
+private:
+public:
+  Field();
+  void draw();
+};
 
 // ------------------------------------------------------- exported variables --
 

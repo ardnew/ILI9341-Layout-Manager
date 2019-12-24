@@ -24,7 +24,12 @@
 
 // ----------------------------------------------------------- exported types --
 
-/* nothing */
+class Panel {
+private:
+public:
+  Panel();
+  void draw();
+};
 
 // ------------------------------------------------------- exported variables --
 
