@@ -9,8 +9,9 @@
 
 // ----------------------------------------------------------------- includes --
 
+#include <vector>
+
 #include "Screen.h"
-#include "Layer.h"
 
 // ---------------------------------------------------------- private defines --
 
@@ -26,13 +27,15 @@
 
 // ------------------------------------------------------- exported variables --
 
-uint16_t const COORD_INVALID     =  0xFFFF;
-uint16_t const DIMNS_INVALID     =  0xFFFF;
-Pressure const PRESSURE_INVALID  =  0xFF;
-Radius   const NO_RADIUS         =  0x00;
+uint16_t const COORD_INVALID          = 0xFFFF;
+uint16_t const DIMNS_INVALID          = 0xFFFF;
+Pressure const PRESSURE_INVALID       = 0xFF;
+Radius   const NO_RADIUS              = 0x00;
 
 Point const POINT_INVALID(COORD_INVALID, COORD_INVALID);
 Touch const NO_TOUCH(false);
+
+uint8_t  const LAYER_INDEX_INVALID    = 0xFF;
 
 // -------------------------------------------------------- private variables --
 
@@ -68,6 +71,14 @@ void Screen::draw()
     Touch touch = touched();
     Layer *layer;
 
+
+    // screen touch events. see class Frame for component event handlers.
+    if (!_touch.isTouched() && touch.isTouched()) {
+      if (nullptr != _touchBegin)
+        { _touchBegin(*this, touch); }
+      _touch = touch;
+    }
+
     if (_refresh) {
 
       // if we are refreshing the screen, walk over the layers in forward
@@ -85,6 +96,14 @@ void Screen::draw()
       // if we are not refreshing the screen, only redraw the top-most layer
       layer = &(_layer[_layerIndexTop]);
       layer->draw(*this, touch);
+    }
+
+    // screen touch events. see class Frame for component event handlers.
+    if (_touch.isTouched() && !touch.isTouched()) {
+      // use the last-read touch, since the current one is not touched
+      if (nullptr != _touchEnd)
+        { _touchEnd(*this, _touch); }
+      _touch = touch;
     }
   }
 }
@@ -121,13 +140,82 @@ void Screen::paintFrame(
 
 void Screen::setLayerIndexTop(uint8_t const index)
 {
-  if (index != _layerIndexTop) {
-    if (index < _MAX_LAYERS)
-      { _layerIndexTop = index; }
-    for (uint8_t i = index + 1; i < _MAX_LAYERS; ++i)
-      { _layer[i].clearPanels(*this); }
-    _layer[index].setNeedsUpdate(*this);
+  if (index < _layerIndexTop) {
+
+    // first, gather a list of all panels that will be removed (among all
+    // layers above the new top layer) to determine which regions of the screen
+    // that need to be repainted
+    std::vector<Panel *> panelsRemoving;
+    for (uint8_t i = index + 1; i < _MAX_LAYERS; ++i) {
+      std::vector<Panel *> panels = _layer[i].panels(*this);
+      // append this layer's panels to vector containing all layers' panels
+      panelsRemoving.insert(
+          std::end(panelsRemoving), std::begin(panels), std::end(panels));
+      _layer[i].setNeedsRemove(*this);
+    }
+
+    // (DEBUG) color removed frames instead of removing them
+    //Color colorRemoved = COLOR_PINK;
+    Color colorRemoved = _color;
+
+    if (!panelsRemoving.empty()) {
+      // _refresh forces consideration of all layers for repaint on next draw
+      // cycle (not just the top layer)
+      _refresh = true;
+      auto pRem = panelsRemoving.begin();
+      while (pRem != panelsRemoving.end()) {
+        // paint over the frames being removed
+        paintFrame(
+            (*pRem)->frame().origin(),
+            (*pRem)->frame().size(),
+            colorRemoved, colorRemoved);
+        // next, mark all frames overlapping any frame being removed as "needs
+        // to be updated" for next draw cycle.
+        for (uint8_t i = 0; i <= index; ++i) {
+          std::vector<Panel *> panelsUpdating =
+              _layer[i].panelsOverlappingFrame(*this, (*pRem)->frame());
+          if (!panelsUpdating.empty()) {
+            auto pUpd = panelsUpdating.begin();
+            while (pUpd != panelsUpdating.end()) {
+              // (DEBUG) paint over the frames being updated
+              //paintFrame(
+              //    (*pUpd)->frame().origin(),
+              //    (*pUpd)->frame().size(),
+              //    COLOR_WHITE, COLOR_WHITE);
+              (*pUpd)->setNeedsUpdate();
+              ++pUpd;
+            }
+          }
+        }
+        ++pRem;
+      }
+    }
   }
+  if (index < _MAX_LAYERS)
+    { _layerIndexTop = index; }
+}
+
+uint8_t Screen::layerIndexAbove(uint8_t const index) const
+{
+  if (index < _layerIndexTop) {
+    for (uint8_t i = index + 1; i <= _layerIndexTop; ++i) {
+      if (_layer[i].panelCount() > 0U)
+        { return i; }
+    }
+  }
+  return LAYER_INDEX_INVALID;
+}
+
+uint8_t Screen::layerIndexBelow(uint8_t const index) const
+{
+  if (index > 0U) {
+    // exit condition must check for underflow, since 0..TOP-1 are valid values
+    for (uint8_t i = index - 1; i < _layerIndexTop; --i) {
+      if (_layer[i].panelCount() > 0U)
+        { return i; }
+    }
+  }
+  return LAYER_INDEX_INVALID;
 }
 
 // -------------------------------------------------------- private functions --

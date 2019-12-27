@@ -31,38 +31,43 @@ LayoutManager *man = nullptr;
 Panel *p1 = nullptr;
 Panel *p2 = nullptr;
 
-void p1_begin(Frame const &f, Touch const &t) { Serial.printf("p1_begin {%u,%u}\n", t.x(), t.y()); }
-void p1_end(Frame const &f, Touch const &t) { Serial.printf("p1_end {%u,%u}\n", t.x(), t.y()); }
 void p1_press(Frame const &f, Touch const &t)
 {
   Serial.printf("p1_press {%u,%u}\n", t.x(), t.y());
-
-  // add another panel to the second layer
-  if (nullptr == p2) {
-    p2 = man->addPanel(
-        1U,        // layer 1 (above-bottom-most)
-        50U, 40U,  // origin, top-left (x,y) point
-        30U, 40U,  // size, width and height
-        0U,        // radius of rounded corners of panel, 0 for none (square)
-        COLOR_GREEN, COLOR_YELLOW, // panel color touched, not-touched
-        0U,        // rounded corner radius of border
-        COLOR_RED, COLOR_BLUE      // border color touched, not-touched
-     );
-    // set some callbacks
-    p2->setTouchBegin(p2_begin);
-    p2->setTouchEnd(p2_end);
-    p2->setTouchPress(p2_press);
-  }
-
 }
 
-void p2_begin(Frame const &f, Touch const &t) { Serial.printf("p2_begin {%u,%u}\n", t.x(), t.y()); }
-void p2_end(Frame const &f, Touch const &t) { Serial.printf("p2_end {%u,%u}\n", t.x(), t.y()); }
 void p2_press(Frame const &f, Touch const &t)
 {
   Serial.printf("p2_press {%u,%u}\n", t.x(), t.y());
-  man->removeTopLayer();
-  p2 = nullptr;
+}
+
+void screenTouchBegin(Screen const &s, Touch const &t)
+{
+  Serial.printf("BEG({%u,%u}, %u)\n", t.x(), t.y(), t.pressure());
+}
+
+void screenTouchEnd(Screen const &s, Touch const &t)
+{
+  Serial.printf("END({%u,%u}, %u)\n", t.x(), t.y(), t.pressure());
+
+  if (t.x() > 160) {
+    uint8_t index = man->layerIndexTop() + 1U;
+    // add a panel to a new layer
+    man->addPanel(
+        index,
+        20U + index * 20,
+        20U + index * 10,  // origin, top-left (x,y) point
+        75U, 20U,  // size, width and height
+        0U,        // radius of rounded corners of panel, 0 for none (square)
+        COLOR_WHITE, COLOR_PURPLE, // panel color, touched color
+        0U,        // rounded corner radius of border, as above
+        COLOR_PURPLE, COLOR_WHITE  // border color, touched color
+    );
+  }
+  else {
+    // remove the top-most layer
+    man->layerRemoveTop();
+  }
 }
 
 void setup()
@@ -80,21 +85,33 @@ void setup()
       TOUCH_CS_PIN, TOUCH_IRQ_PIN,
       // Both
       320, 240, Orientation::Landscape, COLOR_BLACK);
+  man->setTouchBegin(screenTouchBegin);
+  man->setTouchEnd(screenTouchEnd);
 
   // add one panel to the first layer
   p1 = man->addPanel(
       0U,        // layer 0 (bottom-most)
-      30U, 60U,  // origin, top-left (x,y) point
-      40U, 50U,  // size, width and height
+      20U, 20U,  // origin, top-left (x,y) point
+      80U, 40U,  // size, width and height
       0U,        // radius of rounded corners of panel, 0 for none (square)
-      COLOR_RED, COLOR_BLUE,    // panel color touched, not-touched
-      0U,        // rounded corner radius of border
-      COLOR_YELLOW, COLOR_GREEN // border color touched, not-touched
+      COLOR_BLUE, COLOR_GREEN, // panel color, touched color
+      0U,        // rounded corner radius of border, as above
+      COLOR_YELLOW, COLOR_RED  // border color, touched color
    );
   // set some callbacks
-  p1->setTouchBegin(p1_begin);
-  p1->setTouchEnd(p1_end);
   p1->setTouchPress(p1_press);
+
+  p2 = man->addPanel(
+      0U,        // layer
+      120U, 20U, // origin, top-left (x,y) point
+      80U,  40U, // size, width and height
+      0U,        // radius of rounded corners of panel, 0 for none (square)
+      COLOR_RED, COLOR_YELLOW, // panel color, touched color
+      0U,        // rounded corner radius of border, as above
+      COLOR_GREEN, COLOR_BLUE  // border color, touched color
+   );
+  // set some callbacks
+  p2->setTouchPress(p2_press);
 
   // initialize the screen with all currently defined components
   if (!man->begin()) {

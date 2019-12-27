@@ -48,7 +48,6 @@ private:
   uint16_t _top;
   uint16_t _bottom;
   bool _canTouch;
-  bool _isTouched;
   bool _isBordered;
   Color _color;
   Color _colorTouched;
@@ -57,6 +56,8 @@ private:
   Radius _radiusCorner;
   Radius _radiusBorder;
   bool _update;
+  bool _remove;
+  Touch _touch;
   FrameTouchCallback _touchBegin;
   FrameTouchCallback _touchEnd;
   FrameTouchCallback _touchPress;
@@ -71,7 +72,6 @@ public:
     _top(0U),
     _bottom(0U),
     _canTouch(false),
-    _isTouched(false),
     _isBordered(false),
     _color(FRAME_COLOR_DEFAULT),
     _colorTouched(FRAME_COLOR_DEFAULT),
@@ -80,6 +80,8 @@ public:
     _radiusCorner(FRAME_CORNER_RADIUS_DEFAULT),
     _radiusBorder(FRAME_BORDER_RADIUS_DEFAULT),
     _update(false),
+    _remove(false),
+    _touch(),
     _touchBegin(nullptr),
     _touchEnd(nullptr),
     _touchPress(nullptr)
@@ -99,7 +101,6 @@ public:
     _top(origin.y()),
     _bottom(origin.y() + size.height()),
     _canTouch(false),
-    _isTouched(false),
     _isBordered(false),
     _color(color),
     _colorTouched(color),
@@ -108,6 +109,8 @@ public:
     _radiusCorner(radiusCorner),
     _radiusBorder(FRAME_BORDER_RADIUS_DEFAULT),
     _update(true),
+    _remove(false),
+    _touch(),
     _touchBegin(nullptr),
     _touchEnd(nullptr),
     _touchPress(nullptr)
@@ -128,7 +131,6 @@ public:
     _top(origin.y()),
     _bottom(origin.y() + size.height()),
     _canTouch(true),
-    _isTouched(false),
     _isBordered(false),
     _color(color),
     _colorTouched(colorTouched),
@@ -137,6 +139,8 @@ public:
     _radiusCorner(radiusCorner),
     _radiusBorder(FRAME_BORDER_RADIUS_DEFAULT),
     _update(true),
+    _remove(false),
+    _touch(),
     _touchBegin(nullptr),
     _touchEnd(nullptr),
     _touchPress(nullptr)
@@ -158,7 +162,6 @@ public:
     _top(origin.y()),
     _bottom(origin.y() + size.height()),
     _canTouch(false),
-    _isTouched(false),
     _isBordered(true),
     _color(color),
     _colorTouched(color),
@@ -167,6 +170,8 @@ public:
     _radiusCorner(radiusCorner),
     _radiusBorder(radiusBorder),
     _update(true),
+    _remove(false),
+    _touch(),
     _touchBegin(nullptr),
     _touchEnd(nullptr),
     _touchPress(nullptr)
@@ -190,7 +195,6 @@ public:
     _top(origin.y()),
     _bottom(origin.y() + size.height()),
     _canTouch(true),
-    _isTouched(false),
     _isBordered(true),
     _color(color),
     _colorTouched(colorTouched),
@@ -199,6 +203,8 @@ public:
     _radiusCorner(radiusCorner),
     _radiusBorder(radiusBorder),
     _update(true),
+    _remove(false),
+    _touch(),
     _touchBegin(nullptr),
     _touchEnd(nullptr),
     _touchPress(nullptr)
@@ -212,6 +218,7 @@ public:
   uint16_t top() const { return _top; }
   uint16_t bottom() const { return _bottom; }
   void setNeedsUpdate() { _update = true; }
+  void setNeedsRemove() { _remove = true; }
   bool contains(Point const &p) const;
   bool overlaps(Frame const &f) const;
   bool covers(Frame const &f) const;
@@ -223,17 +230,23 @@ public:
   void setTouchPress(FrameTouchCallback const callback)
     { _touchPress = callback; }
 
-  // bool operator==(Frame const &f)
-  // {
-
-  // }
-  // bool operator!=(Frame const &f)
-  // {
-
-  // }
-  inline bool operator|=(Point const &p) const { return contains(p); }
-  inline bool operator|=(Frame const &f) const { return overlaps(f); }
-  inline bool operator||(Frame const &f) const { return covers(f); }
+  bool operator==(Frame const &f)
+  {
+    return
+      (_layerIndex == f.layerIndex()) &&
+      (_origin     == f.origin()    ) &&
+      (_size       == f.size()      ) ;
+  }
+  bool operator!=(Frame const &f)
+  {
+    return
+      (_layerIndex != f.layerIndex()) ||
+      (_origin     != f.origin()    ) ||
+      (_size       != f.size()      ) ;
+  }
+  //inline bool operator|=(Point const &p) const { return contains(p); }
+  //inline bool operator|=(Frame const &f) const { return overlaps(f); }
+  //inline bool operator||(Frame const &f) const { return covers(f); }
 };
 
 // ------------------------------------------------------- exported variables --

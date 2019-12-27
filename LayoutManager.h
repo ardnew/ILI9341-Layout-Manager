@@ -86,7 +86,18 @@ public:
       Color const colorBorder, Color const colorBorderTouched
   );
 
-  void removeTopLayer();
+  uint8_t layerIndexTop() const
+    { return _screen.layerIndexTop(); }
+  uint8_t layerIndexNext() const
+    { return _screen.layerIndexAbove(_screen.layerIndexTop()); }
+  uint8_t layerIndexPrev() const
+    { return _screen.layerIndexBelow(_screen.layerIndexTop()); }
+  void layerRemoveTop();
+
+  void setTouchBegin(ScreenTouchCallback callback)
+    { _screen.setTouchBegin(callback); }
+  void setTouchEnd(ScreenTouchCallback callback)
+    { _screen.setTouchEnd(callback); }
 
 };
 

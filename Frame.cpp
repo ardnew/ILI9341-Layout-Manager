@@ -68,39 +68,39 @@ bool Frame::covers(Frame const &f) const
 
 bool Frame::draw(Screen const &screen, Touch const &touch)
 {
+  bool isActiveLayer = (screen.layerIndexTop() == _layerIndex);
   bool isTouchingFrame = false;
 
   if (_canTouch) {
 
     isTouchingFrame =
-        touch.isTouched() && contains(touch.position()) &&
-        (_layerIndex == screen.layerIndexTop());
+        isActiveLayer && touch.isTouched() && contains(touch.position());
 
-    if (_isTouched && !isTouchingFrame) {
+    if (_touch.isTouched() && !isTouchingFrame) {
       if (!touch.isTouched()) {
         if (nullptr != _touchPress) {
-          _touchPress(*this, touch);
+          // use the last-read touch, since the current one is not touched
+          _touchPress(*this, _touch);
         }
       }
       else {
-        // call on-touch-exit event handler
         if (nullptr != _touchEnd) {
-          _touchEnd(*this, _touchEnd);
+          _touchEnd(*this, touch);
         }
       }
       _update = true;
     }
-    else if (!_isTouched && isTouchingFrame) {
+    else if (!_touch.isTouched() && isTouchingFrame) {
       if (nullptr != _touchBegin) {
-        _touchBegin(*this, _touchBegin);
+        _touchBegin(*this, touch);
       }
       _update = true;
     }
 
-    _isTouched = isTouchingFrame;
+    _touch = Touch(isTouchingFrame, touch.position(), touch.pressure());
   }
 
-  if (_update) {
+  if (!_remove && _update) {
 
     if (!isTouchingFrame) {
       if (_isBordered) {

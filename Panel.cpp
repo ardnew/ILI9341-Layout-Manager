@@ -9,8 +9,6 @@
 
 // ----------------------------------------------------------------- includes --
 
-#include <vector>
-
 #include "Panel.h"
 #include "Screen.h"
 #include "Layer.h"

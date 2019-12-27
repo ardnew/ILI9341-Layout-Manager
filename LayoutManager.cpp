@@ -135,12 +135,16 @@ Panel *LayoutManager::addPanel(
   return nullptr;
 }
 
-void LayoutManager::removeTopLayer()
+void LayoutManager::layerRemoveTop()
 {
-  uint8_t indexTop = _screen.layerIndexTop();
-  if (indexTop > 0U) {
-    _screen.setLayerIndexTop(indexTop - 1U);
-  }
+  // locate the previous top-most layer that actually has panels populated on it
+  //   (not necessarily indexTop - 1)
+  uint8_t indexPrev = layerIndexPrev();
+
+  if (LAYER_INDEX_INVALID != indexPrev)
+    { _screen.setLayerIndexTop(indexPrev); }
+  else
+    { _screen.setLayerIndexTop(0U); }
 }
 
 // -------------------------------------------------------- private functions --

@@ -36,6 +36,8 @@
 
 // ----------------------------------------------------------- exported types --
 
+typedef void (* ScreenTouchCallback)(Screen const &, Touch const &);
+
 class Screen {
 private:
   static const uint8_t _MAX_LAYERS = 10U;
@@ -50,10 +52,12 @@ private:
   uint16_t _height;
   Orientation _orientation;
   Color _color;
+  Touch _touch;
   bool _refresh;
   std::array<Layer,_MAX_LAYERS> _layer;
   uint8_t _layerIndexTop;
-
+  ScreenTouchCallback _touchBegin;
+  ScreenTouchCallback _touchEnd;
   bool initDisplay(void);
   bool initTouchScreen(void);
   Touch touched(void);
@@ -79,12 +83,15 @@ public:
     _height(height),
     _orientation(orientation),
     _color(color),
+    _touch(),
     _refresh(true),
     _layer(),
-    _layerIndexTop(0U)
+    _layerIndexTop(0U),
+    _touchBegin(nullptr),
+    _touchEnd(nullptr)
   {
     for (uint8_t i = 0U; i < _MAX_LAYERS; ++i)
-      { _layer[i].setIndex(i); } // index shall not -ever- change after this.
+      { _layer[i].setIndex(i); } // index shall -never- change after this.
   }
 
   // the following two accessors return non-const references, which are
@@ -97,7 +104,8 @@ public:
   Orientation orientation(void) const { return _orientation; }
   bool begin(void);
   void draw(void);
-  void refresh() { _refresh = true; }
+  bool needsRefresh() const { return _refresh; }
+  void setNeedsRefresh() { _refresh = true; }
   void paintFrame(
       Point const &origin,
       Size const &size,
@@ -114,11 +122,18 @@ public:
     { return index < _MAX_LAYERS ? (Layer *)&(_layer[index]) : nullptr; }
   uint8_t layerIndexTop() const { return _layerIndexTop; }
   void setLayerIndexTop(uint8_t const index);
+  uint8_t layerIndexAbove(uint8_t const index) const;
+  uint8_t layerIndexBelow(uint8_t const index) const;
+
+  void setTouchBegin(ScreenTouchCallback const callback)
+    { _touchBegin = callback; }
+  void setTouchEnd(ScreenTouchCallback const callback)
+    { _touchEnd = callback; }
 };
 
 // ------------------------------------------------------- exported variables --
 
-/* nothing */
+extern uint8_t const LAYER_INDEX_INVALID;
 
 // ------------------------------------------------------- exported functions --
 

@@ -41,20 +41,18 @@
 
 void Layer::draw(Screen const &screen, Touch const &touch)
 {
-  if (!_panel.empty()) {
-    auto it = _panel.begin();
-    while (it != _panel.end()) {
-      it->draw(screen, touch);
-      ++it;
-    }
+  if (_remove) {
+    clearPanels(screen);
+    _remove = false;
   }
-}
-
-void Layer::clearPanels(Screen const &screen)
-{
-  if (!_panel.empty()) {
-
-    _panel.clear();
+  else {
+    if (!_panel.empty()) {
+      auto it = _panel.begin();
+      while (it != _panel.end()) {
+        it->draw(screen, touch);
+        ++it;
+      }
+    }
   }
 }
 
@@ -71,7 +69,40 @@ void Layer::setNeedsUpdate(Screen const &screen)
   }
 }
 
-std::vector<Panel *> Layer::panelsOverlappingFrame(Screen const &screen, Frame const &frame)
+void Layer::setNeedsRemove(Screen const &screen)
+{
+  __UNUSED__(screen)
+
+  _remove = true;
+
+  if (!_panel.empty()) {
+    auto it = _panel.begin();
+    while (it != _panel.end()) {
+      it->setNeedsRemove();
+      ++it;
+    }
+  }
+}
+
+std::vector<Panel *> Layer::panels(Screen const &screen)
+{
+  __UNUSED__(screen)
+
+  std::vector<Panel *> vec;
+
+  if (!_panel.empty()) {
+    auto it = _panel.begin();
+    while (it != _panel.end()) {
+      vec.push_back(&(*it));
+      ++it;
+    }
+  }
+
+  return vec;
+}
+
+std::vector<Panel *> Layer::panelsOverlappingFrame(
+    Screen const &screen, Frame const &frame)
 {
   __UNUSED__(screen)
 
@@ -92,4 +123,14 @@ std::vector<Panel *> Layer::panelsOverlappingFrame(Screen const &screen, Frame c
 
 // -------------------------------------------------------- private functions --
 
-/* nothing */
+void Layer::clearPanels(Screen const &screen)
+{
+  __UNUSED__(screen)
+
+  // this modifies the actual Panel list, which should not be performed at just
+  // any time during the draw cycle -- only during times outside of the Layer
+  // and Panel list painting iterations.
+  if (!_panel.empty())
+    { _panel.clear(); }
+}
+
