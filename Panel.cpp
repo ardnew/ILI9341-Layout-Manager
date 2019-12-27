@@ -9,7 +9,11 @@
 
 // ----------------------------------------------------------------- includes --
 
+#include <vector>
+
 #include "Panel.h"
+#include "Screen.h"
+#include "Layer.h"
 
 // ---------------------------------------------------------- private defines --
 
@@ -37,16 +41,14 @@
 
 // ------------------------------------------------------- exported functions --
 
-Panel::Panel()
+void Panel::draw(Screen const &screen, Touch const &touch)
 {
-
-}
-
-void Panel::draw()
-{
-
+  (void)drawPanel(screen, touch);
 }
 
 // -------------------------------------------------------- private functions --
 
-/* nothing */
+bool Panel::drawPanel(Screen const &screen, Touch const &touch)
+{
+  return _frame.draw(screen, touch);
+}

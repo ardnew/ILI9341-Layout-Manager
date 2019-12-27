@@ -10,6 +10,8 @@
 // ----------------------------------------------------------------- includes --
 
 #include "Layer.h"
+#include "Screen.h"
+#include "Frame.h"
 
 // ---------------------------------------------------------- private defines --
 
@@ -37,14 +39,55 @@
 
 // ------------------------------------------------------- exported functions --
 
-Layer::Layer()
+void Layer::draw(Screen const &screen, Touch const &touch)
 {
-
+  if (!_panel.empty()) {
+    auto it = _panel.begin();
+    while (it != _panel.end()) {
+      it->draw(screen, touch);
+      ++it;
+    }
+  }
 }
 
-void Layer::draw()
+void Layer::clearPanels(Screen const &screen)
 {
+  if (!_panel.empty()) {
 
+    _panel.clear();
+  }
+}
+
+void Layer::setNeedsUpdate(Screen const &screen)
+{
+  __UNUSED__(screen)
+
+  if (!_panel.empty()) {
+    auto it = _panel.begin();
+    while (it != _panel.end()) {
+      it->setNeedsUpdate();
+      ++it;
+    }
+  }
+}
+
+std::vector<Panel *> Layer::panelsOverlappingFrame(Screen const &screen, Frame const &frame)
+{
+  __UNUSED__(screen)
+
+  std::vector<Panel *> vec;
+
+  if (!_panel.empty()) {
+    auto it = _panel.begin();
+    while (it != _panel.end()) {
+      if (it->frame().overlaps(frame)) {
+        vec.push_back(&(*it));
+      }
+      ++it;
+    }
+  }
+
+  return vec;
 }
 
 // -------------------------------------------------------- private functions --

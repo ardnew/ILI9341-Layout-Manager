@@ -12,7 +12,10 @@
 
 // ----------------------------------------------------------------- includes --
 
-/* nothing */
+#include <Arduino.h>
+
+#include "Primitive.h"
+#include "Frame.h"
 
 // ------------------------------------------------------------------ defines --
 
@@ -22,13 +25,30 @@
 
 /* nothing */
 
+// ----------------------------------------------------- forward declarations --
+
+class Screen;
+
 // ----------------------------------------------------------- exported types --
 
 class Panel {
 private:
+  Frame _frame;
+  bool drawPanel(Screen const &screen, Touch const &touch);
+
 public:
-  Panel();
-  void draw();
+  constexpr Panel(void): _frame() {}
+  constexpr Panel(Frame frame): _frame(frame) {}
+
+  constexpr Frame frame() const { return _frame; }
+  void draw(Screen const &screen, Touch const &touch);
+  void setNeedsUpdate() { _frame.setNeedsUpdate(); }
+  void setTouchBegin(FrameTouchCallback const callback)
+    { _frame.setTouchBegin(callback); }
+  void setTouchEnd(FrameTouchCallback const callback)
+    { _frame.setTouchEnd(callback); }
+  void setTouchPress(FrameTouchCallback const callback)
+    { _frame.setTouchPress(callback); }
 };
 
 // ------------------------------------------------------- exported variables --

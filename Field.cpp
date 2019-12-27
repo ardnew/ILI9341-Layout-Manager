@@ -10,6 +10,7 @@
 // ----------------------------------------------------------------- includes --
 
 #include "Field.h"
+#include "Screen.h"
 
 // ---------------------------------------------------------- private defines --
 
@@ -37,12 +38,7 @@
 
 // ------------------------------------------------------- exported functions --
 
-Field::Field()
-{
-
-}
-
-void Field::draw()
+void Field::draw(Screen const &screen, Touch const &touch)
 {
 
 }

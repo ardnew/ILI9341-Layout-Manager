@@ -10,6 +10,8 @@
 // ----------------------------------------------------------------- includes --
 
 #include "LayoutManager.h"
+#include "Layer.h"
+#include "Panel.h"
 
 // ---------------------------------------------------------- private defines --
 
@@ -37,35 +39,109 @@
 
 // ------------------------------------------------------- exported functions --
 
-LayoutManager::LayoutManager(
-    uint16_t const tftCSPin, uint16_t const tftDCPin,
-    uint16_t const tsCSPin, uint16_t const tsIRQPin,
+Panel *LayoutManager::addPanel(
+    uint8_t const layerIndex,
+    uint16_t const x, uint16_t const y,
     uint16_t const width, uint16_t const height,
-    ScreenOrientation const orientation
-):
-  _screen(Screen(
-      tftCSPin, tftDCPin, tsCSPin, tsIRQPin, width, height, orientation
-  ))
+    Radius const radiusCorner,
+    Color const color)
 {
-  /* nothing */
+  Layer *layer = _screen.layer(layerIndex);
+  if (layerIndex > _screen.layerIndexTop())
+    { _screen.setLayerIndexTop(layerIndex); }
+  if (nullptr != layer) {
+    return layer->addPanel(Panel(Frame(
+        layerIndex,
+        Point(x, y),
+        Size(width, height),
+        radiusCorner,
+        color
+    )));
+  }
+  return nullptr;
 }
 
-bool LayoutManager::begin()
+Panel *LayoutManager::addPanel(
+    uint8_t const layerIndex,
+    uint16_t const x, uint16_t const y,
+    uint16_t const width, uint16_t const height,
+    Radius const radiusCorner,
+    Color const color, Color const colorTouched)
 {
-  if (!initScreen())
-    { return false; }
-
-  return true;
+  Layer *layer = _screen.layer(layerIndex);
+  if (layerIndex > _screen.layerIndexTop())
+    { _screen.setLayerIndexTop(layerIndex); }
+  if (nullptr != layer) {
+    return layer->addPanel(Panel(Frame(
+        layerIndex,
+        Point(x, y),
+        Size(width, height),
+        radiusCorner,
+        color, colorTouched
+    )));
+  }
+  return nullptr;
 }
 
-void LayoutManager::draw()
+Panel *LayoutManager::addPanel(
+    uint8_t const layerIndex,
+    uint16_t const x, uint16_t const y,
+    uint16_t const width, uint16_t const height,
+    Radius const radiusCorner,
+    Color const color,
+    Radius const radiusBorder,
+    Color const colorBorder)
 {
-  _screen.draw();
+  Layer *layer = _screen.layer(layerIndex);
+  if (layerIndex > _screen.layerIndexTop())
+    { _screen.setLayerIndexTop(layerIndex); }
+  if (nullptr != layer) {
+    return layer->addPanel(Panel(Frame(
+        layerIndex,
+        Point(x, y),
+        Size(width, height),
+        radiusCorner,
+        color,
+        radiusBorder,
+        colorBorder
+    )));
+  }
+  return nullptr;
+}
+
+Panel *LayoutManager::addPanel(
+    uint8_t const layerIndex,
+    uint16_t const x, uint16_t const y,
+    uint16_t const width, uint16_t const height,
+    Radius const radiusCorner,
+    Color const color, Color const colorTouched,
+    Radius const radiusBorder,
+    Color const colorBorder, Color const colorBorderTouched)
+{
+  Layer *layer = _screen.layer(layerIndex);
+  if (layerIndex > _screen.layerIndexTop())
+    { _screen.setLayerIndexTop(layerIndex); }
+  if (nullptr != layer) {
+    return layer->addPanel(Panel(Frame(
+        layerIndex,
+        Point(x, y),
+        Size(width, height),
+        radiusCorner,
+        color, colorTouched,
+        radiusBorder,
+        colorBorder, colorBorderTouched
+    )));
+  }
+  return nullptr;
+}
+
+void LayoutManager::removeTopLayer()
+{
+  uint8_t indexTop = _screen.layerIndexTop();
+  if (indexTop > 0U) {
+    _screen.setLayerIndexTop(indexTop - 1U);
+  }
 }
 
 // -------------------------------------------------------- private functions --
 
-bool LayoutManager::initScreen()
-{
-  return _screen.begin();
-}

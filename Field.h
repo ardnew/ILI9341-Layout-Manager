@@ -12,7 +12,10 @@
 
 // ----------------------------------------------------------------- includes --
 
-/* nothing */
+#include <Arduino.h>
+
+#include "Primitive.h"
+#include "Frame.h"
 
 // ------------------------------------------------------------------ defines --
 
@@ -22,13 +25,21 @@
 
 /* nothing */
 
+// ----------------------------------------------------- forward declarations --
+
+class Screen;
+
 // ----------------------------------------------------------- exported types --
 
 class Field {
 private:
+  Frame _frame;
+
 public:
-  Field();
-  void draw();
+  constexpr Field(void): _frame() {}
+  constexpr Field(Frame frame): _frame(frame) {}
+
+  void draw(Screen const &screen, Touch const &touch);
 };
 
 // ------------------------------------------------------- exported variables --
