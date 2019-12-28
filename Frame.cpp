@@ -104,18 +104,18 @@ bool Frame::draw(Screen const &screen, Touch const &touch)
 
     if (!isTouchingFrame) {
       if (_isBordered) {
-        screen.paintFrame(_origin, _size, _color, _colorBorder);
+        screen.paintFrame(_origin, _size, _radiusCorner, _color, _radiusBorder, _marginBorder, _colorBorder);
       }
       else {
-        screen.paintFrame(_origin, _size, _color);
+        screen.paintFrame(_origin, _size, _radiusCorner, _color);
       }
     }
     else {
       if (_isBordered) {
-        screen.paintFrame(_origin, _size, _colorTouched, _colorBorderTouched);
+        screen.paintFrame(_origin, _size, _radiusCorner, _colorTouched, _radiusBorder, _marginBorder, _colorBorderTouched);
       }
       else {
-        screen.paintFrame(_origin, _size, _colorTouched);
+        screen.paintFrame(_origin, _size, _radiusCorner, _colorTouched);
       }
     }
     _update = false;

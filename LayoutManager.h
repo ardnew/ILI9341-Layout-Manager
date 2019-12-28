@@ -73,7 +73,7 @@ public:
       uint16_t const width, uint16_t const height,
       Radius const radiusCorner,
       Color const color,
-      Radius const radiusBorder,
+      Radius const radiusBorder, int8_t marginBorder,
       Color const colorBorder
   );
   Panel *addPanel(
@@ -82,7 +82,7 @@ public:
       uint16_t const width, uint16_t const height,
       Radius const radiusCorner,
       Color const color, Color const colorTouched,
-      Radius const radiusBorder,
+      Radius const radiusBorder, int8_t marginBorder,
       Color const colorBorder, Color const colorBorderTouched
   );
 

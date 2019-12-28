@@ -61,6 +61,21 @@ private:
   bool initDisplay(void);
   bool initTouchScreen(void);
   Touch touched(void);
+  void fillFrame(
+      Point const &origin,
+      Size const &size,
+      Radius const radiusCorner,
+      int8_t const margin,
+      Color const color
+  ) const;
+  void drawQuarterCircle(
+      int16_t const x0, int16_t const y0, int16_t const r,
+      uint8_t const corner, uint16_t const color
+  ) const;
+  void fillQuarterCircle(
+      int16_t const x0, int16_t const y0, int16_t const r,
+      uint8_t const corner, int16_t const delta, uint16_t const color
+  ) const;
 
 public:
   Screen(
@@ -109,12 +124,16 @@ public:
   void paintFrame(
       Point const &origin,
       Size const &size,
+      Radius const radiusCorner,
       Color const color
   ) const;
   void paintFrame(
       Point const &origin,
       Size const &size,
+      Radius const radiusCorner,
       Color const color,
+      Radius const radiusBorder,
+      int8_t const marginBorder,
       Color const colorBorder
   ) const;
   uint8_t maxLayers() const { return _MAX_LAYERS; }

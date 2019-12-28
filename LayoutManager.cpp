@@ -89,7 +89,7 @@ Panel *LayoutManager::addPanel(
     uint16_t const width, uint16_t const height,
     Radius const radiusCorner,
     Color const color,
-    Radius const radiusBorder,
+    Radius const radiusBorder, int8_t marginBorder,
     Color const colorBorder)
 {
   Layer *layer = _screen.layer(layerIndex);
@@ -102,7 +102,7 @@ Panel *LayoutManager::addPanel(
         Size(width, height),
         radiusCorner,
         color,
-        radiusBorder,
+        radiusBorder, marginBorder,
         colorBorder
     )));
   }
@@ -115,7 +115,7 @@ Panel *LayoutManager::addPanel(
     uint16_t const width, uint16_t const height,
     Radius const radiusCorner,
     Color const color, Color const colorTouched,
-    Radius const radiusBorder,
+    Radius const radiusBorder, int8_t marginBorder,
     Color const colorBorder, Color const colorBorderTouched)
 {
   Layer *layer = _screen.layer(layerIndex);
@@ -128,7 +128,7 @@ Panel *LayoutManager::addPanel(
         Size(width, height),
         radiusCorner,
         color, colorTouched,
-        radiusBorder,
+        radiusBorder, marginBorder,
         colorBorder, colorBorderTouched
     )));
   }

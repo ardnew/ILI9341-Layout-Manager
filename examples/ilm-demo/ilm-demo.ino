@@ -61,6 +61,7 @@ void screenTouchEnd(Screen const &s, Touch const &t)
         0U,        // radius of rounded corners of panel, 0 for none (square)
         COLOR_WHITE, COLOR_PURPLE, // panel color, touched color
         0U,        // rounded corner radius of border, as above
+        0,         // border margin, <0 outside panel, >0 inside panel
         COLOR_PURPLE, COLOR_WHITE  // border color, touched color
     );
   }
@@ -93,9 +94,10 @@ void setup()
       0U,        // layer 0 (bottom-most)
       20U, 20U,  // origin, top-left (x,y) point
       80U, 40U,  // size, width and height
-      0U,        // radius of rounded corners of panel, 0 for none (square)
+      6U,        // radius of rounded corners of panel, 0 for none (square)
       COLOR_BLUE, COLOR_GREEN, // panel color, touched color
-      0U,        // rounded corner radius of border, as above
+      6U,        // rounded corner radius of border, as above
+      0,          // border margin, <0 outside panel, >0 inside panel
       COLOR_YELLOW, COLOR_RED  // border color, touched color
    );
   // set some callbacks
@@ -105,9 +107,10 @@ void setup()
       0U,        // layer
       120U, 20U, // origin, top-left (x,y) point
       80U,  40U, // size, width and height
-      0U,        // radius of rounded corners of panel, 0 for none (square)
+      8U,        // radius of rounded corners of panel, 0 for none (square)
       COLOR_RED, COLOR_YELLOW, // panel color, touched color
-      0U,        // rounded corner radius of border, as above
+      8U,        // rounded corner radius of border, as above
+      0,          // border margin, <0 outside panel, >0 inside panel
       COLOR_GREEN, COLOR_BLUE  // border color, touched color
    );
   // set some callbacks

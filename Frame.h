@@ -47,6 +47,7 @@ private:
   uint16_t _right;
   uint16_t _top;
   uint16_t _bottom;
+  int8_t _marginBorder;
   bool _canTouch;
   bool _isBordered;
   Color _color;
@@ -71,6 +72,7 @@ public:
     _right(0U),
     _top(0U),
     _bottom(0U),
+    _marginBorder(0U),
     _canTouch(false),
     _isBordered(false),
     _color(FRAME_COLOR_DEFAULT),
@@ -100,6 +102,7 @@ public:
     _right(origin.x() + size.width()),
     _top(origin.y()),
     _bottom(origin.y() + size.height()),
+    _marginBorder(0U),
     _canTouch(false),
     _isBordered(false),
     _color(color),
@@ -130,6 +133,7 @@ public:
     _right(origin.x() + size.width()),
     _top(origin.y()),
     _bottom(origin.y() + size.height()),
+    _marginBorder(0U),
     _canTouch(true),
     _isBordered(false),
     _color(color),
@@ -152,6 +156,7 @@ public:
       Radius const radiusCorner,
       Color const color,
       Radius const radiusBorder,
+      int8_t const marginBorder,
       Color const colorBorder
   ):
     _layerIndex(layerIndex),
@@ -161,6 +166,7 @@ public:
     _right(origin.x() + size.width()),
     _top(origin.y()),
     _bottom(origin.y() + size.height()),
+    _marginBorder(marginBorder),
     _canTouch(false),
     _isBordered(true),
     _color(color),
@@ -184,6 +190,7 @@ public:
       Color const color,
       Color const colorTouched,
       Radius const radiusBorder,
+      int8_t const marginBorder,
       Color const colorBorder,
       Color const colorBorderTouched
   ):
@@ -194,6 +201,7 @@ public:
     _right(origin.x() + size.width()),
     _top(origin.y()),
     _bottom(origin.y() + size.height()),
+    _marginBorder(marginBorder),
     _canTouch(true),
     _isBordered(true),
     _color(color),

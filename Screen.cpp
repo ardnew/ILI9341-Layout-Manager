@@ -111,29 +111,86 @@ void Screen::draw()
 void Screen::paintFrame(
     Point const &origin,
     Size const &size,
+    Radius const radiusCorner,
     Color const color
 ) const
 {
   tft()->startWrite();
-  tft()->writeFillRect(origin.x(), origin.y(), size.width(), size.height(), color);
+
+  fillFrame(origin, size, radiusCorner, 0, color);
+
   tft()->endWrite();
 }
 
 void Screen::paintFrame(
     Point const &origin,
     Size const &size,
+    Radius const radiusCorner,
     Color const color,
+    Radius const radiusBorder,
+    int8_t const marginBorder,
     Color const colorBorder
 ) const
 {
   tft()->startWrite();
 
-  tft()->writeFillRect(origin.x(), origin.y(), size.width(), size.height(), color);
+  uint16_t offset;
+  if (marginBorder < 0) {
+    offset = 0;
+  }
+  else {
+    offset = marginBorder;
+  }
 
-  tft()->writeFastHLine(origin.x(),                   origin.y(),  size.width(), colorBorder);
-  tft()->writeFastHLine(origin.x(),   origin.y() + size.height(),  size.width(), colorBorder);
-  tft()->writeFastVLine(origin.x(),                   origin.y(), size.height(), colorBorder);
-  tft()->writeFastVLine(origin.x() + size.width(),    origin.y(), size.height(), colorBorder);
+  fillFrame(origin, size, radiusCorner, marginBorder, color);
+
+  tft()->writeFastHLine(
+      origin.x() + radiusBorder + offset,
+      origin.y() + offset,
+      size.width() - 2 * (radiusBorder + offset),
+      colorBorder
+  );
+  tft()->writeFastHLine(
+      origin.x() + radiusBorder + offset,
+      origin.y() + size.height() - offset - 1,
+      size.width() - 2 * (radiusBorder + offset),
+      colorBorder
+  );
+  tft()->writeFastVLine(
+      origin.x() + offset,
+      origin.y() + radiusBorder + offset,
+      size.height() - 2 * (radiusBorder + offset),
+      colorBorder
+  );
+  tft()->writeFastVLine(
+      origin.x() + size.width() - offset - 1,
+      origin.y() + radiusBorder + offset,
+      size.height() - 2 * (radiusBorder + offset),
+      colorBorder
+  );
+
+  if (radiusBorder > 0) {
+    drawQuarterCircle(
+        origin.x() + radiusBorder + offset,
+        origin.y() + radiusBorder + offset,
+        radiusBorder, 1, colorBorder
+    );
+    drawQuarterCircle(
+        origin.x() + size.width() - (radiusBorder + offset) - 1,
+        origin.y() + radiusBorder + offset,
+        radiusBorder, 2, colorBorder
+    );
+    drawQuarterCircle(
+        origin.x() + size.width() - (radiusBorder + offset) - 1,
+        origin.y() + size.height() - (radiusBorder + offset) - 1,
+        radiusBorder, 4, colorBorder
+    );
+    drawQuarterCircle(
+        origin.x() + radiusBorder + offset,
+        origin.y() + size.height() - (radiusBorder + offset) - 1,
+        radiusBorder, 8, colorBorder
+    );
+  }
 
   tft()->endWrite();
 }
@@ -168,7 +225,7 @@ void Screen::setLayerIndexTop(uint8_t const index)
         paintFrame(
             (*pRem)->frame().origin(),
             (*pRem)->frame().size(),
-            colorRemoved, colorRemoved);
+            0U, colorRemoved, 0U, 0U, colorRemoved);
         // next, mark all frames overlapping any frame being removed as "needs
         // to be updated" for next draw cycle.
         for (uint8_t i = 0; i <= index; ++i) {
@@ -255,4 +312,130 @@ Touch Screen::touched()
     }
   }
   return NO_TOUCH;
+}
+
+void Screen::fillFrame(
+    Point const &origin,
+    Size const &size,
+    Radius const radiusCorner,
+    int8_t const margin,
+    Color const color
+) const
+{
+  uint16_t offset = 0U;
+  if (margin < 0)
+    { offset = abs(margin); }
+
+  tft()->writeFillRect(
+      origin.x() + radiusCorner + offset,
+      origin.y() + offset,
+      size.width() - 2 * (radiusCorner + offset),
+      size.height() - 2 * offset,
+      color
+  );
+
+  if (radiusCorner > 0) {
+
+    fillQuarterCircle(
+        origin.x() + size.width() - (radiusCorner + offset) - 1,
+        origin.y() + radiusCorner + offset,
+        radiusCorner,
+        1,
+        size.height() - 2 * (radiusCorner + offset) - 1,
+        color
+    );
+    fillQuarterCircle(
+        origin.x() + radiusCorner + offset,
+        origin.y() + radiusCorner + offset,
+        radiusCorner,
+        2,
+        size.height() - 2 * (radiusCorner + offset) - 1,
+        color
+    );
+
+  }
+}
+
+void Screen::drawQuarterCircle(
+    int16_t const x0, int16_t const y0, int16_t const r,
+    uint8_t const corner, uint16_t const color
+) const
+{
+  int16_t f  = 1 - r;
+  int16_t fx = 1;
+  int16_t fy = -2 * r;
+  int16_t x  = 0;
+  int16_t y  = r;
+
+  while (x < y) {
+
+    if (f >= 0) {
+      --y;
+      fy += 2;
+      f  += fy;
+    }
+    ++x;
+    fx += 2;
+    f  += fx;
+
+    if (corner & 0x4) {
+      tft()->writePixel(x0 + x, y0 + y, color);
+      tft()->writePixel(x0 + y, y0 + x, color);
+    }
+    if (corner & 0x2) {
+      tft()->writePixel(x0 + x, y0 - y, color);
+      tft()->writePixel(x0 + y, y0 - x, color);
+    }
+    if (corner & 0x8) {
+      tft()->writePixel(x0 - y, y0 + x, color);
+      tft()->writePixel(x0 - x, y0 + y, color);
+    }
+    if (corner & 0x1) {
+      tft()->writePixel(x0 - y, y0 - x, color);
+      tft()->writePixel(x0 - x, y0 - y, color);
+    }
+  }
+}
+
+void Screen::fillQuarterCircle(
+    int16_t const x0, int16_t const y0, int16_t const r,
+    uint8_t const corner, int16_t const delta, uint16_t const color
+) const
+{
+  int16_t f  =  1 - r;
+  int16_t d  = delta + 1;
+  int16_t fx = 1;
+  int16_t fy = -2 * r;
+  int16_t x  = 0;
+  int16_t y  = r;
+  int16_t px = x;
+  int16_t py = y;
+
+  while (x < y) {
+
+    if (f >= 0) {
+      --y;
+      fy += 2;
+      f  += fy;
+    }
+    ++x;
+    fx += 2;
+    f  += fx;
+
+    if (x < (y + 1)) {
+      if (corner & 1)
+        { tft()->writeFastVLine(x0 + x, y0 - y, 2 * y + d, color); }
+      if (corner & 2)
+        { tft()->writeFastVLine(x0 - x, y0 - y, 2 * y + d, color); }
+    }
+    if (y != py) {
+      if (corner & 1)
+        { tft()->writeFastVLine(x0 + py, y0 - px, 2 * px + d, color); }
+      if (corner & 2)
+        { tft()->writeFastVLine(x0 - py, y0 - px, 2 * px + d, color); }
+      py = y;
+    }
+
+    px = x;
+  }
 }
