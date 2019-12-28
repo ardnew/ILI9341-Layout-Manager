@@ -61,6 +61,9 @@ private:
   bool initDisplay(void);
   bool initTouchScreen(void);
   Touch touched(void);
+  void updateOverlappingPanels(
+      uint8_t const layerIndexTop, Panel * const panel
+  );
   void fillFrame(
       Point const &origin,
       Size const &size,

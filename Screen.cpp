@@ -228,22 +228,7 @@ void Screen::setLayerIndexTop(uint8_t const index)
             0U, colorRemoved, 0U, 0U, colorRemoved);
         // next, mark all frames overlapping any frame being removed as "needs
         // to be updated" for next draw cycle.
-        for (uint8_t i = 0; i <= index; ++i) {
-          std::vector<Panel *> panelsUpdating =
-              _layer[i].panelsOverlappingFrame(*this, (*pRem)->frame());
-          if (!panelsUpdating.empty()) {
-            auto pUpd = panelsUpdating.begin();
-            while (pUpd != panelsUpdating.end()) {
-              // (DEBUG) paint over the frames being updated
-              //paintFrame(
-              //    (*pUpd)->frame().origin(),
-              //    (*pUpd)->frame().size(),
-              //    COLOR_WHITE, COLOR_WHITE);
-              (*pUpd)->setNeedsUpdate();
-              ++pUpd;
-            }
-          }
-        }
+        updateOverlappingPanels(index, *pRem);
         ++pRem;
       }
     }
@@ -312,6 +297,27 @@ Touch Screen::touched()
     }
   }
   return NO_TOUCH;
+}
+
+void Screen::updateOverlappingPanels(
+    uint8_t const layerIndexTop, Panel * const panel
+)
+{
+  if (nullptr != panel) {
+    panel->setNeedsUpdate();
+    for (uint8_t i = 0; i <= layerIndexTop; ++i) {
+      std::vector<Panel *> overlapping =
+          _layer[i].panelsOverlappingFrame(*this, panel->frame());
+      if (!overlapping.empty()) {
+        auto pit = overlapping.begin();
+        while (pit != overlapping.end()) {
+          if (!(*pit)->needsUpdate())
+            { updateOverlappingPanels(layerIndexTop, *pit); }
+          ++pit;
+        }
+      }
+    }
+  }
 }
 
 void Screen::fillFrame(

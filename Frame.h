@@ -225,6 +225,7 @@ public:
   uint16_t right() const { return _right; }
   uint16_t top() const { return _top; }
   uint16_t bottom() const { return _bottom; }
+  bool needsUpdate() const { return _update; }
   void setNeedsUpdate() { _update = true; }
   void setNeedsRemove() { _remove = true; }
   bool contains(Point const &p) const;

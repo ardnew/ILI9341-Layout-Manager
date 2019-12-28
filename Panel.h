@@ -42,6 +42,7 @@ public:
 
   constexpr Frame frame() const { return _frame; }
   void draw(Screen const &screen, Touch const &touch);
+  bool needsUpdate() const { return _frame.needsUpdate(); }
   void setNeedsUpdate() { _frame.setNeedsUpdate(); }
   void setNeedsRemove() { _frame.setNeedsRemove(); }
   void setTouchBegin(FrameTouchCallback const callback)
