@@ -61,6 +61,9 @@ public:
   bool begin() { return initScreen(); }
   void draw() { _screen.draw(); }
 
+  uint16_t width(void) const { return _screen.width(); }
+  uint16_t height(void) const { return _screen.width(); }
+
   Panel *addPanel(
       uint8_t const layerIndex,
       uint16_t const x, uint16_t const y,
