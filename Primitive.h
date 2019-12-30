@@ -12,12 +12,17 @@
 
 // ----------------------------------------------------------------- includes --
 
-/* nothing */
+#include <Arduino.h>
+
+#if defined(min) || defined(max)
+#undef min // Arduino.h defines these, while the STL has actual functions with
+#undef max // these names we need to let it use. remove the macros beforehand.
+#endif
 
 // ------------------------------------------------------------------ defines --
 
-// the following one-liner will convert a triplets to 565 encoding:
-//   $ perl -le 'for(@ARGV){($r,$g,$b)=(split/,/g); printf "0x%04X$/",  ((($r & 0xF8) << 8) | (($g & 0xFC) << 3) | (($b & 0xF8) >> 3))}' 173,255,41 255,127,0
+// the following one-liner will convert "R,G,B" triplets to 565 encoding:
+//   $ perl -le 'for(@ARGV){($r,$g,$b)=(split/,/g);printf"0x%04X$/",(($r&0xF8)<<8)|(($g&0xFC)<<3)|(($b&0xF8)>>3)}' 173,255,41 255,127,0
 //   0xAFE5
 //   0xFBE0
 #define COLOR_BLACK       0x0000  // {   0,   0,   0 }
@@ -54,45 +59,37 @@
 
 // ----------------------------------------------------------- exported types --
 
-inline bool equals_float32(float a, float b)
-  { return fabsf(a - b) <= FLOAT32_ABSTOL; }
+class Version {
+protected:
+  constexpr static uint8_t const _strSize = 12U;
+  char _str[_strSize] = { '\0' };
+  uint8_t const _major;
+  uint8_t const _minor;
+  uint8_t const _revision;
+  uint32_t const _base256;
 
-inline bool equals_float64(double a, double b)
-  { return fabsf(a - b) <= FLOAT64_ABSTOL; }
-
-inline bool in_range_u8(uint8_t val, uint8_t min, uint8_t max)
-  { return (val >= min) && (val <= max); }
-
-inline bool in_range_i8(int8_t val, int8_t min, int8_t max)
-  { return (val >= min) && (val <= max); }
-
-inline bool in_range_u16(uint16_t val, uint16_t min, uint16_t max)
-  { return (val >= min) && (val <= max); }
-
-inline bool in_range_i16(int16_t val, int16_t min, int16_t max)
-  { return (val >= min) && (val <= max); }
-
-inline bool in_range_u32(uint32_t val, uint32_t min, uint32_t max)
-  { return (val >= min) && (val <= max); }
-
-inline bool in_range_i32(int32_t val, int32_t min, int32_t max)
-  { return (val >= min) && (val <= max); }
-
-inline bool in_range_u64(uint64_t val, uint64_t min, uint64_t max)
-  { return (val >= min) && (val <= max); }
-
-inline bool in_range_i64(int64_t val, int64_t min, int64_t max)
-  { return (val >= min) && (val <= max); }
-
-inline bool in_range_float32(float val, float min, float max)
-  { return ((val > min) || (equals_float32(val, min)))
-            &&
-           ((val < max) || (equals_float32(val, max))); }
-
-inline bool in_range_float64(double val, double min, double max)
-  { return ((val > min) || (equals_float64(val, min)))
-            &&
-           ((val < max) || (equals_float64(val, max))); }
+public:
+  Version(
+      uint8_t const major,
+      uint8_t const minor,
+      uint8_t const revision
+  ):
+    _major(major),
+    _minor(minor),
+    _revision(revision),
+    _base256(((major << 16U) | (minor << 8U) | revision) & 0x00FFFFFF)
+  {
+    sprintf(_str, "%u.%u.%u", _major, _minor, _revision);
+  }
+  inline char const *versionStr() const
+    { return _str; }
+  inline bool operator==(Version const &version)
+    { return _base256 == version._base256; }
+  inline bool operator!=(Version const &version)
+    { return _base256 != version._base256; }
+  inline bool operator<(Version const &version)
+    { return _base256 < version._base256; }
+};
 
 class Point {
 protected:
@@ -214,6 +211,44 @@ extern Touch    const NO_TOUCH;
 
 // ------------------------------------------------------- exported functions --
 
-/* nothing */
+inline bool equals_float32(float a, float b)
+  { return fabsf(a - b) <= FLOAT32_ABSTOL; }
+
+inline bool equals_float64(double a, double b)
+  { return fabsf(a - b) <= FLOAT64_ABSTOL; }
+
+inline bool in_range_u8(uint8_t val, uint8_t min, uint8_t max)
+  { return (val >= min) && (val <= max); }
+
+inline bool in_range_i8(int8_t val, int8_t min, int8_t max)
+  { return (val >= min) && (val <= max); }
+
+inline bool in_range_u16(uint16_t val, uint16_t min, uint16_t max)
+  { return (val >= min) && (val <= max); }
+
+inline bool in_range_i16(int16_t val, int16_t min, int16_t max)
+  { return (val >= min) && (val <= max); }
+
+inline bool in_range_u32(uint32_t val, uint32_t min, uint32_t max)
+  { return (val >= min) && (val <= max); }
+
+inline bool in_range_i32(int32_t val, int32_t min, int32_t max)
+  { return (val >= min) && (val <= max); }
+
+inline bool in_range_u64(uint64_t val, uint64_t min, uint64_t max)
+  { return (val >= min) && (val <= max); }
+
+inline bool in_range_i64(int64_t val, int64_t min, int64_t max)
+  { return (val >= min) && (val <= max); }
+
+inline bool in_range_float32(float val, float min, float max)
+  { return ((val > min) || (equals_float32(val, min)))
+            &&
+           ((val < max) || (equals_float32(val, max))); }
+
+inline bool in_range_float64(double val, double min, double max)
+  { return ((val > min) || (equals_float64(val, min)))
+            &&
+           ((val < max) || (equals_float64(val, max))); }
 
 #endif // __PRIMITIVE_H__

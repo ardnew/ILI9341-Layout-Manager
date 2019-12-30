@@ -14,8 +14,6 @@
 
 #include <string>
 
-#include <Arduino.h>
-
 #include "Primitive.h"
 #include "Frame.h"
 

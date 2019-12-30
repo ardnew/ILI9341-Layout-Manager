@@ -12,10 +12,9 @@
 
 // ----------------------------------------------------------------- includes --
 
+#include <vector>
 #include <array>
 #include <string>
-
-#include <Arduino.h>
 
 #include <Adafruit_ILI9341.h>
 #include <XPT2046_Calibrated.h>

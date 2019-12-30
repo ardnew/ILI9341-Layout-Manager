@@ -12,20 +12,25 @@
 
 // ----------------------------------------------------------------- includes --
 
-#include <string>
-
 #include <Arduino.h>
+
+#if defined(min) || defined(max)
+#undef min // Arduino.h defines these, while the STL has actual functions with
+#undef max // these names we need to let it use. remove the macros beforehand.
+#endif
+
+#include <string>
 
 #include "Primitive.h"
 #include "Screen.h"
 
 // ------------------------------------------------------------------ defines --
 
-/* nothing */
+#define VERSION_MAJ 1
+#define VERSION_MIN 0
+#define VERSION_REV 0
 
 // ------------------------------------------------------------------- macros --
-
-/* nothing */
 
 // ----------------------------------------------------- forward declarations --
 

@@ -9,12 +9,16 @@
 
 #include <LayoutManager.h>
 
+#include <Arduino.h>
+
+#include <string>
+
 // ------------------------------------------------------------ configuration --
 
 //#define WAIT_FOR_SERIAL
 
-#define GRAND_CENTRAL_M4
-//#define ITSY_BITSY_M4
+//#define GRAND_CENTRAL_M4
+#define ITSY_BITSY_M4
 
 // TFT Touchscreen GPIO pin definitions
 #if defined(GRAND_CENTRAL_M4)
@@ -35,18 +39,18 @@
 #elif defined(ITSY_BITSY_M4)
 #define TFT_VCC_PIN    /* 3v3 */
 #define TFT_GND_PIN    /* GND */
-#define TFT_CS_PIN          7
-#define TFT_RST_PIN        13
-#define TFT_DC_PIN         12
+#define TFT_CS_PIN         16 // A2
+#define TFT_RST_PIN    /* 3v3 */
+#define TFT_DC_PIN         17 // A3
 #define TFT_MOSI_PIN       25
 #define TFT_SCK_PIN        24
 #define TFT_LED_PIN    /* 3v3 */
 #define TFT_MISO_PIN       23
 #define TOUCH_CLK_PIN      24
-#define TOUCH_CS_PIN       11
+#define TOUCH_CS_PIN        2
 #define TOUCH_MOSI_PIN     25
 #define TOUCH_MISO_PIN     23
-#define TOUCH_IRQ_PIN       9
+#define TOUCH_IRQ_PIN       7
 #endif
 
 #define EXPAND(x) x ## 1
@@ -113,10 +117,10 @@ void loop()
     uint16_t val1 = curr % 1000;
     uint16_t val2 = time % 500;
     if (val1 > 500) {
-      snprintf(buf, 32, "%u", val1);
+      sprintf(buf, "%u", val1);
     }
     else {
-      snprintf(buf, 32, "%u\n%u", val1, val2);
+      sprintf(buf, "%u\n%u", val1, val2);
     }
     p1f2->setText(buf);
     time = curr;

@@ -15,8 +15,6 @@
 #include <list>
 #include <vector>
 
-#include <Arduino.h>
-
 #include "Primitive.h"
 #include "Panel.h"
 
