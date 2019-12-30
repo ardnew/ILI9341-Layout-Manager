@@ -14,14 +14,12 @@
 
 #include <Arduino.h>
 
-#include <Adafruit_ILI9341.h>
-
 #include "Primitive.h"
 
 // ------------------------------------------------------------------ defines --
 
-#define FRAME_COLOR_DEFAULT                   ILI9341_BLACK
-#define FRAME_BORDER_COLOR_DEFAULT            ILI9341_WHITE
+#define FRAME_COLOR_DEFAULT                   COLOR_BLACK
+#define FRAME_BORDER_COLOR_DEFAULT            COLOR_WHITE
 #define FRAME_CORNER_RADIUS_DEFAULT           0U
 #define FRAME_BORDER_RADIUS_DEFAULT           0U
 
@@ -39,7 +37,7 @@ class Frame;
 typedef void (* FrameTouchCallback)(Frame const &, Touch const &);
 
 class Frame {
-private:
+protected:
   uint8_t _layerIndex;
   Point _origin;
   Size _size;
@@ -220,14 +218,21 @@ public:
 
   uint8_t layerIndex() const { return _layerIndex; }
   Point origin() const { return _origin; }
+  void setOrigin(Point const origin);
   Size size() const { return _size; }
+  void setSize(Size const size);
   uint16_t left() const { return _left; }
   uint16_t right() const { return _right; }
   uint16_t top() const { return _top; }
   uint16_t bottom() const { return _bottom; }
+  bool canTouch() const { return _canTouch; }
+  Color color() const { return _color; }
+  Color colorTouched() const { return _colorTouched; }
+  Radius radiusCorner() const { return _radiusCorner; }
   bool needsUpdate() const { return _update; }
   void setNeedsUpdate() { _update = true; }
   void setNeedsRemove() { _remove = true; }
+  Touch touch() const { return _touch; }
   bool contains(Point const &p) const;
   bool overlaps(Frame const &f) const;
   bool covers(Frame const &f) const;

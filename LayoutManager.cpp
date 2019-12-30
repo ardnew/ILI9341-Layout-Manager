@@ -89,7 +89,7 @@ Panel *LayoutManager::addPanel(
     uint16_t const width, uint16_t const height,
     Radius const radiusCorner,
     Color const color,
-    Radius const radiusBorder, int8_t marginBorder,
+    Radius const radiusBorder, int8_t const marginBorder,
     Color const colorBorder)
 {
   Layer *layer = _screen.layer(layerIndex);
@@ -115,7 +115,7 @@ Panel *LayoutManager::addPanel(
     uint16_t const width, uint16_t const height,
     Radius const radiusCorner,
     Color const color, Color const colorTouched,
-    Radius const radiusBorder, int8_t marginBorder,
+    Radius const radiusBorder, int8_t const marginBorder,
     Color const colorBorder, Color const colorBorderTouched)
 {
   Layer *layer = _screen.layer(layerIndex);
@@ -131,6 +131,99 @@ Panel *LayoutManager::addPanel(
         radiusBorder, marginBorder,
         colorBorder, colorBorderTouched
     )));
+  }
+  return nullptr;
+}
+
+Field *LayoutManager::addField(
+    Panel * const panel,
+    std::string const text,
+    uint8_t const sizeText,
+    Color const colorText,
+    Radius const radiusCorner,
+    Color const colorPanel
+)
+{
+  if (nullptr != panel) {
+    return panel->addField(Field(Frame(
+        panel->frame()->layerIndex(),
+        Point(0U, 0U), // determined when drawing
+        Size(0U, 0U),  // determined when drawing
+        radiusCorner,
+        colorPanel
+    ), text, sizeText, colorText));
+  }
+  return nullptr;
+}
+
+Field *LayoutManager::addField(
+    Panel * const panel,
+    std::string const text,
+    uint8_t const sizeText,
+    Color const colorText, Color const colorTextTouched,
+    Radius const radiusCorner,
+    Color const colorPanel, Color const colorPanelTouched
+)
+{
+  if (nullptr != panel) {
+    return panel->addField(Field(Frame(
+        panel->frame()->layerIndex(),
+        Point(0U, 0U), // determined when drawing
+        Size(0U, 0U),  // determined when drawing
+        radiusCorner,
+        colorPanel, colorPanelTouched
+    ), text, sizeText, colorText, colorTextTouched));
+  }
+  return nullptr;
+}
+
+Field *LayoutManager::addField(
+    Panel * const panel,
+    std::string const text,
+    uint8_t const sizeText,
+    Color const colorText,
+    Radius const radiusCorner,
+    Color const colorPanel,
+    Radius const radiusBorder, int8_t const marginBorder,
+    Color const colorBorder
+)
+{
+  if (nullptr != panel) {
+    return panel->addField(Field(Frame(
+        panel->frame()->layerIndex(),
+        Point(0U, 0U), // determined when drawing
+        Size(0U, 0U),  // determined when drawing
+        radiusCorner,
+        colorPanel,
+        radiusBorder, marginBorder,
+        colorBorder
+    ), text, sizeText, colorText));
+  }
+  return nullptr;
+
+}
+
+Field *LayoutManager::addField(
+    Panel * const panel,
+    std::string const text,
+    uint8_t const sizeText,
+    Color const colorText, Color const colorTextTouched,
+    Radius const radiusCorner,
+    Color const colorPanel, Color const colorPanelTouched,
+    Radius const radiusBorder, int8_t const marginBorder,
+    Color const colorBorder, Color const colorBorderTouched
+)
+{
+  if (nullptr != panel) {
+    return panel->addField(Field(Frame(
+        panel->frame()->layerIndex(),
+        Point(0U, 0U), // determined when drawing
+        Size(0U, 0U),  // determined when drawing
+        radiusCorner,
+        colorPanel, colorPanelTouched,
+        radiusBorder, marginBorder,
+        colorBorder, colorBorderTouched
+    ), text, sizeText, colorText, colorTextTouched));
   }
   return nullptr;
 }

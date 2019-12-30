@@ -13,6 +13,7 @@
 // ----------------------------------------------------------------- includes --
 
 #include <array>
+#include <string>
 
 #include <Arduino.h>
 
@@ -39,7 +40,7 @@
 typedef void (* ScreenTouchCallback)(Screen const &, Touch const &);
 
 class Screen {
-private:
+protected:
   static const uint8_t _MAX_LAYERS = 10U;
 
   Adafruit_ILI9341 _tft;
@@ -58,12 +59,16 @@ private:
   uint8_t _layerIndexTop;
   ScreenTouchCallback _touchBegin;
   ScreenTouchCallback _touchEnd;
+
   bool initDisplay(void);
   bool initTouchScreen(void);
+
   Touch touched(void);
+
   void updateOverlappingPanels(
       uint8_t const layerIndexTop, Panel * const panel
   );
+
   void fillFrame(
       Point const &origin,
       Size const &size,
@@ -120,10 +125,13 @@ public:
   uint16_t height(void) const { return _height; }
   Color color(void) const { return _color; }
   Orientation orientation(void) const { return _orientation; }
+
   bool begin(void);
   void draw(void);
+
   bool needsRefresh() const { return _refresh; }
   void setNeedsRefresh() { _refresh = true; }
+
   void paintFrame(
       Point const &origin,
       Size const &size,
@@ -139,11 +147,23 @@ public:
       int8_t const marginBorder,
       Color const colorBorder
   ) const;
+
+  void paintText(
+      Point const &center,
+      std::string const text,
+      uint8_t const lineCount,
+      uint8_t const sizeText,
+      Color const colorText
+  ) const;
+
   uint8_t maxLayers() const { return _MAX_LAYERS; }
+
   Layer *layer(uint8_t const index) const
     { return index < _MAX_LAYERS ? (Layer *)&(_layer[index]) : nullptr; }
+
   uint8_t layerIndexTop() const { return _layerIndexTop; }
   void setLayerIndexTop(uint8_t const index);
+
   uint8_t layerIndexAbove(uint8_t const index) const;
   uint8_t layerIndexBelow(uint8_t const index) const;
 

@@ -38,6 +38,30 @@
 
 // ------------------------------------------------------- exported functions --
 
+void Frame::setOrigin(Point const origin)
+{
+  _origin = origin;
+
+  _left = origin.x();
+  _right = origin.x() + _size.width();
+  _top = origin.y();
+  _bottom = origin.y() + _size.height();
+
+  setNeedsUpdate();
+}
+
+void Frame::setSize(Size const size)
+{
+  _size = size;
+
+  _left = _origin.x();
+  _right = _origin.x() + size.width();
+  _top = _origin.y();
+  _bottom = _origin.y() + size.height();
+
+  setNeedsUpdate();
+}
+
 bool Frame::contains(Point const &p) const
 {
   return

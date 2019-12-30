@@ -12,6 +12,8 @@
 
 // ----------------------------------------------------------------- includes --
 
+#include <string>
+
 #include <Arduino.h>
 
 #include "Primitive.h"
@@ -32,7 +34,7 @@ class Panel;
 // ----------------------------------------------------------- exported types --
 
 class LayoutManager {
-private:
+protected:
   Screen _screen;
 
   bool initScreen() { return _screen.begin(); }
@@ -73,7 +75,7 @@ public:
       uint16_t const width, uint16_t const height,
       Radius const radiusCorner,
       Color const color,
-      Radius const radiusBorder, int8_t marginBorder,
+      Radius const radiusBorder, int8_t const marginBorder,
       Color const colorBorder
   );
   Panel *addPanel(
@@ -82,7 +84,44 @@ public:
       uint16_t const width, uint16_t const height,
       Radius const radiusCorner,
       Color const color, Color const colorTouched,
-      Radius const radiusBorder, int8_t marginBorder,
+      Radius const radiusBorder, int8_t const marginBorder,
+      Color const colorBorder, Color const colorBorderTouched
+  );
+
+  Field *addField(
+      Panel * const panel,
+      std::string const text,
+      uint8_t const sizeText,
+      Color const colorText,
+      Radius const radiusCorner,
+      Color const color
+  );
+  Field *addField(
+      Panel * const panel,
+      std::string const text,
+      uint8_t const sizeText,
+      Color const colorText, Color const colorTextTouched,
+      Radius const radiusCorner,
+      Color const color, Color const colorTouched
+  );
+  Field *addField(
+      Panel * const panel,
+      std::string const text,
+      uint8_t const sizeText,
+      Color const colorText,
+      Radius const radiusCorner,
+      Color const color,
+      Radius const radiusBorder, int8_t const marginBorder,
+      Color const colorBorder
+  );
+  Field *addField(
+      Panel * const panel,
+      std::string const text,
+      uint8_t const sizeText,
+      Color const colorText, Color const colorTextTouched,
+      Radius const radiusCorner,
+      Color const color, Color const colorTouched,
+      Radius const radiusBorder, int8_t const marginBorder,
       Color const colorBorder, Color const colorBorderTouched
   );
 

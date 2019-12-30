@@ -36,7 +36,7 @@ class Frame;
 // ----------------------------------------------------------- exported types --
 
 class Layer {
-private:
+protected:
   uint8_t _index;
   bool _remove;
   std::list<Panel> _panel;
@@ -44,20 +44,34 @@ private:
   void clearPanels(Screen const &screen);
 
 public:
-  Layer(void): _index(0U), _remove(false), _panel() /* non-const */ {}
-  Layer(uint8_t index): _index(index), _remove(false), _panel() {}
+  Layer(void):
+    _index(0U),
+    _remove(false),
+    _panel() /* non-const */
+  {}
+  Layer(uint8_t index):
+    _index(index),
+    _remove(false),
+    _panel()
+  {}
 
-  constexpr uint8_t index(void) const { return _index; }
+  uint8_t index(void) const { return _index; }
   void setIndex(uint8_t index) { _index = index; } // INTERNAL (DO NOT USE)
+
   void draw(Screen const &screen, Touch const &touch);
+
   Panel *addPanel(Panel panel)
   {
     _panel.push_back(panel);
     return &(_panel.back());
   }
+
   void setNeedsUpdate(Screen const &screen);
   void setNeedsRemove(Screen const &screen);
-  uint16_t panelCount() const { return _panel.empty() ? 0U : _panel.size(); }
+
+  uint16_t panelCount() const
+    { return _panel.empty() ? 0U : _panel.size(); }
+
   std::vector<Panel *> panels(Screen const &screen);
   std::vector<Panel *> panelsOverlappingFrame(
       Screen const &screen, Frame const &frame);

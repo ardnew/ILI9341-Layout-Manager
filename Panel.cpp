@@ -41,12 +41,147 @@
 
 void Panel::draw(Screen const &screen, Touch const &touch)
 {
-  (void)drawPanel(screen, touch);
+  bool panelUpdate = _frame.draw(screen, touch);
+
+  uint16_t numFields = fieldCount();
+  if (numFields > 0U) {
+
+    switch (_axis) {
+      case LayoutAxis::Horizontal:
+        {
+          uint16_t fieldIndex = 0U;
+          uint16_t fieldWidth =
+            (_frame.size().width() - 2U * _margin - (numFields - 1U) * _padding)
+              / numFields;
+
+          auto it = _field.begin();
+          while (it != _field.end()) {
+
+            if (!it->framePositioned()) {
+              it->setPosition(
+                  Point(
+                      _frame.left() + _margin +
+                        fieldIndex * (_padding + fieldWidth),
+                      _frame.top() + _margin
+                  ),
+                  Size(
+                      fieldWidth,
+                      _frame.size().height() - 2U * _margin
+                  ));
+            }
+
+            Frame *fieldFrame = (Frame *)it->frame();
+            if (panelUpdate)
+              { fieldFrame->setNeedsUpdate(); }
+            bool fieldUpdate = fieldFrame->draw(screen, touch);
+            if (fieldUpdate) {
+
+              Color colorText = it->colorText();
+              if (fieldFrame->canTouch()) {
+                if (fieldFrame->touch().isTouched()) {
+                  colorText = it->colorTextTouched();
+                }
+              }
+
+              screen.paintText(
+                  Point(
+                      (uint16_t)
+                        ((float)(fieldFrame->left() + fieldFrame->right())
+                          / 2.0F + 0.5F),
+                      (uint16_t)
+                        ((float)(fieldFrame->top() + fieldFrame->bottom())
+                          / 2.0F + 0.5F)
+                  ),
+                  it->text(), it->lineCount(), it->sizeText(), colorText
+              );
+            }
+
+            ++fieldIndex;
+            ++it;
+          }
+        }
+        break;
+
+      case LayoutAxis::Vertical:
+        {
+
+          uint16_t lineCount;
+          if (_proportional) {
+            lineCount = 0U;
+            auto it = _field.begin();
+            while (it != _field.end()) {
+              lineCount += it->lineCount();
+              ++it;
+            }
+          }
+          else {
+            lineCount = numFields;
+          }
+
+          uint16_t fieldIndex = 0U;
+          uint16_t lineHeight =
+            (uint16_t)((float)(_frame.size().height() -
+                2U * _margin - (numFields - 1) * _padding)
+              / lineCount + 0.5F);
+
+          uint16_t lineTop = _frame.top() + _margin;
+
+          auto it = _field.begin();
+          while (it != _field.end()) {
+
+            if (!it->framePositioned()) {
+              uint16_t fieldLineCount = it->lineCount();
+              if (!_proportional)
+                { fieldLineCount = 1U; }
+              it->setPosition(
+                  Point(
+                      _frame.left() + _margin,
+                      lineTop
+                  ),
+                  Size(
+                      _frame.size().width() - 2U * _margin,
+                      lineHeight * fieldLineCount
+                  ));
+            }
+            lineTop += it->frame()->size().height() + _padding;
+
+            Frame *fieldFrame = (Frame *)it->frame();
+            if (panelUpdate)
+              { fieldFrame->setNeedsUpdate(); }
+            bool fieldUpdate = fieldFrame->draw(screen, touch);
+            if (fieldUpdate) {
+
+              Color colorText = it->colorText();
+              if (fieldFrame->canTouch()) {
+                if (fieldFrame->touch().isTouched()) {
+                  colorText = it->colorTextTouched();
+                }
+              }
+
+              screen.paintText(
+                  Point(
+                      (uint16_t)
+                        ((float)(fieldFrame->left() + fieldFrame->right())
+                          / 2.0F + 0.5F),
+                      (uint16_t)
+                        ((float)(fieldFrame->top() + fieldFrame->bottom())
+                          / 2.0F + 0.5F)
+                  ),
+                  it->text(), it->lineCount(), it->sizeText(), colorText
+              );
+            }
+
+            ++fieldIndex;
+            ++it;
+          }
+        }
+        break;
+
+      default:
+        break;
+    }
+  }
 }
 
 // -------------------------------------------------------- private functions --
 
-bool Panel::drawPanel(Screen const &screen, Touch const &touch)
-{
-  return _frame.draw(screen, touch);
-}

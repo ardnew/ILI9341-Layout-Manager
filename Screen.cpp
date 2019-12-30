@@ -71,7 +71,6 @@ void Screen::draw()
     Touch touch = touched();
     Layer *layer;
 
-
     // screen touch events. see class Frame for component event handlers.
     if (!_touch.isTouched() && touch.isTouched()) {
       if (nullptr != _touchBegin)
@@ -195,6 +194,59 @@ void Screen::paintFrame(
   tft()->endWrite();
 }
 
+void Screen::paintText(
+    Point const &center,
+    std::string const text,
+    uint8_t const lineCount,
+    uint8_t const sizeText,
+    Color const colorText
+) const
+{
+  int16_t boundsX, boundsY;
+  uint16_t blockWidth, blockHeight;
+  uint16_t lineWidth, lineHeight;
+  uint16_t textX, textY;
+
+  tft()->setTextSize(sizeText);
+  tft()->setTextColor(colorText);
+
+  tft()->getTextBounds(
+      text.c_str(), 0, 0, &boundsX, &boundsY, &blockWidth, &blockHeight);
+
+  float perLineHeight = (float)blockHeight / lineCount + 0.5F;
+
+  uint16_t currLine = 0U;
+
+  size_t start = 0;
+  size_t end = text.find_first_of('\n');
+
+  std::string line;
+
+  while (end <= std::string::npos)
+  {
+    line = text.substr(start, end - start);
+
+    tft()->getTextBounds(
+        line.c_str(), 0, 0, &boundsX, &boundsY, &lineWidth, &lineHeight);
+
+    textX = center.x() - (uint16_t)((float)lineWidth / 2.0F + 0.5F);
+    textY = center.y() - (uint16_t)(
+        (float)blockHeight / 2.0F + 0.5F
+      ) + currLine * perLineHeight;
+
+    tft()->setCursor(textX, textY);
+    tft()->print(line.c_str());
+
+    ++currLine;
+
+    if (end == std::string::npos)
+      { break; }
+
+    start = end + 1;
+    end = text.find_first_of('\n', start);
+  }
+}
+
 void Screen::setLayerIndexTop(uint8_t const index)
 {
   if (index < _layerIndexTop) {
@@ -223,11 +275,9 @@ void Screen::setLayerIndexTop(uint8_t const index)
       while (pRem != panelsRemoving.end()) {
         // paint over the frames being removed
         paintFrame(
-            (*pRem)->frame().origin(),
-            (*pRem)->frame().size(),
+            (*pRem)->frame()->origin(),
+            (*pRem)->frame()->size(),
             0U, colorRemoved, 0U, 0U, colorRemoved);
-        // next, mark all frames overlapping any frame being removed as "needs
-        // to be updated" for next draw cycle.
         updateOverlappingPanels(index, *pRem);
         ++pRem;
       }
@@ -267,6 +317,7 @@ bool Screen::initDisplay()
   _tft.begin();
   _tft.setRotation((uint8_t)_orientation);
   _tft.fillScreen((uint16_t)_color);
+  _tft.setTextWrap(false);
   return true;
 }
 
@@ -307,7 +358,7 @@ void Screen::updateOverlappingPanels(
     panel->setNeedsUpdate();
     for (uint8_t i = 0; i <= layerIndexTop; ++i) {
       std::vector<Panel *> overlapping =
-          _layer[i].panelsOverlappingFrame(*this, panel->frame());
+          _layer[i].panelsOverlappingFrame(*this, *(panel->frame()));
       if (!overlapping.empty()) {
         auto pit = overlapping.begin();
         while (pit != overlapping.end()) {

@@ -95,7 +95,7 @@ inline bool in_range_float64(double val, double min, double max)
            ((val < max) || (equals_float64(val, max))); }
 
 class Point {
-private:
+protected:
   uint16_t _x;
   uint16_t _y;
 
@@ -113,7 +113,7 @@ public:
 };
 
 class Size {
-private:
+protected:
   uint16_t _width;
   uint16_t _height;
 
@@ -137,7 +137,7 @@ typedef uint8_t Pressure;
 typedef uint8_t Radius;
 
 class Touch {
-private:
+protected:
   bool _isTouched;
   Point _position;
   Pressure _pressure;
@@ -193,6 +193,14 @@ enum class Orientation {
   Top,    PortraitFlip  = Top,    // = 2
   Left,   LandscapeFlip = Left,   // = 3
   COUNT                           // = 4
+};
+
+enum class LayoutAxis {
+  // orientation is based on position of board pins when looking at the screen
+  NONE = -1,
+  Horizontal, // = 0
+  Vertical,   // = 1
+  COUNT       // = 2
 };
 
 // ------------------------------------------------------- exported variables --

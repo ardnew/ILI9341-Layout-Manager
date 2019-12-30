@@ -38,10 +38,7 @@
 
 // ------------------------------------------------------- exported functions --
 
-void Field::draw(Screen const &screen, Touch const &touch)
-{
-
-}
+/* nothing */
 
 // -------------------------------------------------------- private functions --
 

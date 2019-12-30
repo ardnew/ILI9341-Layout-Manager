@@ -111,7 +111,7 @@ std::vector<Panel *> Layer::panelsOverlappingFrame(
   if (!_panel.empty()) {
     auto it = _panel.begin();
     while (it != _panel.end()) {
-      if (it->frame().overlaps(frame)) {
+      if (it->frame()->overlaps(frame)) {
         vec.push_back(&(*it));
       }
       ++it;
