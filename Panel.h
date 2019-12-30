@@ -13,7 +13,6 @@
 // ----------------------------------------------------------------- includes --
 
 #include <list>
-#include <string>
 
 #include "Primitive.h"
 #include "Frame.h"
@@ -83,9 +82,9 @@ public:
     return &(_field.back());
   }
 
-  bool needsUpdate() const { return _frame.needsUpdate(); }
-  void setNeedsUpdate() { _frame.setNeedsUpdate(); }
-  void setNeedsRemove() { _frame.setNeedsRemove(); }
+  bool needsUpdate() const;
+  void setNeedsUpdate();
+  void setNeedsRemove();
   void setTouchBegin(FrameTouchCallback const callback)
     { _frame.setTouchBegin(callback); }
   void setTouchEnd(FrameTouchCallback const callback)

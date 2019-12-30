@@ -12,8 +12,6 @@
 
 // ----------------------------------------------------------------- includes --
 
-#include <string>
-
 #include "Primitive.h"
 #include "Frame.h"
 

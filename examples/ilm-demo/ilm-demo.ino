@@ -9,13 +9,9 @@
 
 #include <LayoutManager.h>
 
-#include <Arduino.h>
-
-#include <string>
-
 // ------------------------------------------------------------ configuration --
 
-//#define WAIT_FOR_SERIAL
+#define WAIT_FOR_SERIAL
 
 //#define GRAND_CENTRAL_M4
 #define ITSY_BITSY_M4
@@ -39,7 +35,7 @@
 #elif defined(ITSY_BITSY_M4)
 #define TFT_VCC_PIN    /* 3v3 */
 #define TFT_GND_PIN    /* GND */
-#define TFT_CS_PIN         16 // A2
+#define TFT_CS_PIN         10 // 16 // A2
 #define TFT_RST_PIN    /* 3v3 */
 #define TFT_DC_PIN         17 // A3
 #define TFT_MOSI_PIN       25
@@ -108,8 +104,8 @@ void setup()
 
 void loop()
 {
-  static uint16_t time = 0;
-  static uint16_t curr;
+  static uint32_t time = 0;
+  static uint32_t curr;
   static char buf[32];
 
   curr = millis();
@@ -155,7 +151,7 @@ void initPeripherals(void)
 #endif
   Serial.begin(115200);
 
-  Serial.printf("creating panels (%u)", 2);
+  Serial.printf("creating layout manager\r\n");
 
   // ---- MANAGER OBJECT ----
 
@@ -170,6 +166,8 @@ void initPeripherals(void)
   man->setTouchEnd(screenTouchEnd);
 
   // ---- PANEL 1 ----
+
+  Serial.printf("creating panel (%u)\r\n", 1);
 
   // add one panel to the first layer
   p1 = man->addPanel(
@@ -217,6 +215,8 @@ void initPeripherals(void)
   p1f1->setTouchPress(p1f1_press);
 
   // ---- PANEL 2 ----
+
+  Serial.printf("creating panel (%u)\r\n", 2);
 
   p2 = man->addPanel(
       0,           // layer
@@ -271,6 +271,8 @@ void initPeripherals(void)
 
   // ---- PANEL 3 ----
 
+  Serial.printf("creating panel (%u)\r\n", 3);
+
   // add one panel to the first layer
   p3 = man->addPanel(
       0,          // layer 0 (bottom-most)
@@ -316,29 +318,29 @@ void initPeripherals(void)
 
 void p1_press(Frame const &f, Touch const &t)
 {
-  Serial.printf("p1_press {%u,%u}", t.x(), t.y());
+  Serial.printf("p1_press {%u,%u}\r\n", t.x(), t.y());
 }
 
 void p2_press(Frame const &f, Touch const &t)
 {
-  Serial.printf("p2_press {%u,%u}", t.x(), t.y());
+  Serial.printf("p2_press {%u,%u}\r\n", t.x(), t.y());
 }
 
 void p1f1_begin(Frame const &f, Touch const &t)
 {
-  Serial.printf("p1f1_begin: {%u,%u}", t.x(), t.y());
+  Serial.printf("p1f1_begin: {%u,%u}\r\n", t.x(), t.y());
 }
 
 void p1f1_end(Frame const &f, Touch const &t)
 {
-  Serial.printf("p1f1_end: {%u,%u}", t.x(), t.y());
+  Serial.printf("p1f1_end: {%u,%u}\r\n", t.x(), t.y());
 }
 
 void p1f1_press(Frame const &f, Touch const &t)
 {
-  Serial.printf("p1f1_press: {%u,%u}", t.x(), t.y());
+  Serial.printf("p1f1_press: {%u,%u}\r\n", t.x(), t.y());
 
-  Serial.printf("p1f1_press: {%u,%u}: adding new layer\n", t.x(), t.y());
+  Serial.printf("p1f1_press: {%u,%u}: adding new layer\r\n", t.x(), t.y());
 
   popup = man->addPanel(
       1,
@@ -390,10 +392,12 @@ void p1f1_press(Frame const &f, Touch const &t)
 
 void screenTouchEnd(Screen const &s, Touch const &t)
 {
-  Serial.printf("screen: ({%u,%u}, %u)\n", t.x(), t.y(), t.pressure());
+  Serial.printf("screen: ({%u,%u}, %u)\r\n", t.x(), t.y(), t.pressure());
 }
 
 void popupButton_press(Frame const &f, Touch const &t)
 {
+  Serial.printf("popupButton_press: {%u,%u}: removing top layer\r\n", t.x(), t.y());
+
   man->layerRemoveTop();
 }

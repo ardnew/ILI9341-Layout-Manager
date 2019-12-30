@@ -19,6 +19,8 @@
 #undef max // these names we need to let it use. remove the macros beforehand.
 #endif
 
+#include <string>
+
 // ------------------------------------------------------------------ defines --
 
 // the following one-liner will convert "R,G,B" triplets to 565 encoding:

@@ -19,8 +19,6 @@
 #undef max // these names we need to let it use. remove the macros beforehand.
 #endif
 
-#include <string>
-
 #include "Primitive.h"
 #include "Screen.h"
 

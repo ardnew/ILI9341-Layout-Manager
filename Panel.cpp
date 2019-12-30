@@ -182,6 +182,48 @@ void Panel::draw(Screen const &screen, Touch const &touch)
     }
   }
 }
+bool Panel::needsUpdate() const
+{
+  if (_frame.needsUpdate())
+    { return true; }
+
+  if (!_field.empty()) {
+    auto it = _field.begin();
+    while (it != _field.end()) {
+      if (it->frame()->needsUpdate())
+        { return true; }
+      ++it;
+    }
+  }
+
+  return false;
+}
+
+void Panel::setNeedsUpdate()
+{
+  _frame.setNeedsUpdate();
+
+  if (!_field.empty()) {
+    auto it = _field.begin();
+    while (it != _field.end()) {
+      ((Frame *)(it->frame()))->setNeedsUpdate();
+      ++it;
+    }
+  }
+}
+
+void Panel::setNeedsRemove()
+{
+  _frame.setNeedsRemove();
+
+  if (!_field.empty()) {
+    auto it = _field.begin();
+    while (it != _field.end()) {
+      ((Frame *)(it->frame()))->setNeedsRemove();
+      ++it;
+    }
+  }
+}
 
 // -------------------------------------------------------- private functions --
 

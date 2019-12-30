@@ -14,7 +14,6 @@
 
 #include <vector>
 #include <array>
-#include <string>
 
 #include <Adafruit_ILI9341.h>
 #include <XPT2046_Calibrated.h>
