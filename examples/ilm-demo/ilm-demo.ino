@@ -65,12 +65,23 @@ Field *p2f1;
 Field *p2f2;
 Field *p2f3;
 
+Panel *p3;
+Field *p3f1;
+Field *p3f2;
+
+Panel *popup;
+Field *popupText;
+
+Panel *popupSubpanel;
+Field *popupButton;
+
 void p1_press(Frame const &f, Touch const &t);
 void p2_press(Frame const &f, Touch const &t);
 void p1f1_begin(Frame const &f, Touch const &t);
 void p1f1_end(Frame const &f, Touch const &t);
 void p1f1_press(Frame const &f, Touch const &t);
 void screenTouchEnd(Screen const &s, Touch const &t);
+void popupButton_press(Frame const &f, Touch const &t);
 
 // -------------------------------------------------------- arduino functions --
 
@@ -93,21 +104,21 @@ void setup()
 
 void loop()
 {
-  static uint16_t time = 0U;
+  static uint16_t time = 0;
   static uint16_t curr;
   static char buf[32];
 
   curr = millis();
-  if (curr - time > 500U) {
-    uint16_t val1 = curr % 1000U;
-    uint16_t val2 = time % 500U;
+  if (curr - time > 500)  {
+    uint16_t val1 = curr % 1000;
+    uint16_t val2 = time % 500;
     if (val1 > 500) {
       snprintf(buf, 32, "%u", val1);
     }
     else {
       snprintf(buf, 32, "%u\n%u", val1, val2);
     }
-    p1f1->setText(buf);
+    p1f2->setText(buf);
     time = curr;
   }
 
@@ -158,19 +169,19 @@ void initPeripherals(void)
 
   // add one panel to the first layer
   p1 = man->addPanel(
-      0U,         // layer 0 (bottom-most)
-      10U,  20U,  // origin, top-left (x,y) point
-      120U, 120U, // size, width and height
-      6U,         // radius of rounded corners of panel, 0 for none (square)
-      COLOR_RED, COLOR_GREEN, // panel color, touched color
-      6U,         // rounded corner radius of border, as above
+      0,          // layer 0 (bottom-most)
+      10,   20,   // origin, top-left (x,y) point
+      120,  120,  // size, width and height
+      6,          // radius of rounded corners of panel, 0 for none (square)
+      COLOR_BLACK, COLOR_GREEN, // panel color, touched color
+      6,          // rounded corner radius of border, as above
       0,          // border margin, <0 outside panel, >0 inside panel
-      COLOR_GREEN, COLOR_RED  // border color, touched color
+      COLOR_GREEN, COLOR_GREEN  // border color, touched color
   );
 
   p1->setAxis(LayoutAxis::Vertical);
-  p1->setMargin(8U);
-  p1->setPadding(8U);
+  p1->setMargin(8);
+  p1->setPadding(8);
 
   // set some callbacks
   p1->setTouchPress(p1_press);
@@ -179,22 +190,22 @@ void initPeripherals(void)
 
   p1f1 = man->addField(
       p1,     // parent panel
-      "p1f1", // field text
-      1U,     // text size
-      COLOR_WHITE, COLOR_NAVY, // text color, touched color
-      6U,     // rounded corner radius of border, 0 for none (square)
-      COLOR_NAVY, COLOR_WHITE  // panel color, touched color
+      "BIG", // field text
+      3,      // text size
+      COLOR_BLACK, COLOR_ORANGE, // text color, touched color
+      3,      // radius of rounded corners of panel, 0 for none (square)
+      COLOR_ORANGE, COLOR_BLACK, // panel color, touched color
+      3,      // rounded corner radius of border, as above
+      0,      // border margin, <0 outside panel, >0 inside panel
+      COLOR_ORANGE, COLOR_ORANGE  // border color, touched color
   );
   p1f2 = man->addField(
       p1,     // parent panel
-      "p1f2", // field text
-      3U,     // text size
-      COLOR_NAVY, COLOR_ORANGE, // text color, touched color
-      6U,     // rounded corner radius of border, 0 for none (square)
-      COLOR_ORANGE, COLOR_NAVY, // panel color, touched color
-      3U,     // rounded corner radius of border, as above
-      3,      // border margin, <0 outside panel, >0 inside panel
-      COLOR_NAVY, COLOR_ORANGE  // border color, touched color
+      "--",   // field text, changed dynamically in loop()
+      2,      // text size
+      COLOR_WHITE, COLOR_GREEN, // text color, touched color
+      6,      // radius of rounded corners of panel, 0 for none (square)
+      COLOR_BLACK, COLOR_BLACK  // panel color, touched color
   );
 
   p1f1->setTouchBegin(p1f1_begin);
@@ -204,19 +215,19 @@ void initPeripherals(void)
   // ---- PANEL 2 ----
 
   p2 = man->addPanel(
-      0U,          // layer
-      20U, 160U,   // origin, top-left (x,y) point
-      200U, 40U,   // size, width and height
-      8U,          // radius of rounded corners of panel, 0 for none (square)
-      COLOR_GREEN, // panel color,
-      8U,          // rounded corner radius of border, as above
+      0,           // layer
+      20,  160,    // origin, top-left (x,y) point
+      220,  60,    // size, width and height
+      0,           // radius of rounded corners of panel, 0 for none (square)
+      COLOR_BLACK, // panel color
+      0,           // rounded corner radius of border, as above
       0,           // border margin, <0 outside panel, >0 inside panel
       COLOR_RED    // border color
   );
 
   p2->setAxis(LayoutAxis::Horizontal);
-  p2->setMargin(2U);
-  p2->setPadding(2U);
+  p2->setMargin(6) ;
+  p2->setPadding(4) ;
 
   // set some callbacks
   p2->setTouchPress(p2_press);
@@ -224,34 +235,78 @@ void initPeripherals(void)
   // ---- PANEL 2 FIELDS ----
 
   p2f1 = man->addField(
-      p2,     // parent panel
-      "p2f1", // field text
-      2U,     // text size
-      COLOR_WHITE, COLOR_NAVY, // text color, touched color
-      6U,     // rounded corner radius of border, 0 for none (square)
-      COLOR_NAVY, COLOR_WHITE  // panel color, touched color
+      p2,      // parent panel
+      "small", // field text
+      1,       // text size
+      COLOR_BLACK, COLOR_RED, // text color, touched color
+      8,       // radius of rounded corners of panel, 0 for none (square)
+      COLOR_RED, COLOR_BLACK  // panel color, touched color
   );
   p2f2 = man->addField(
       p2,     // parent panel
-      "p2f2", // field text
-      1U,     // text size
-      COLOR_NAVY, COLOR_ORANGE, // text color, touched color
-      6U,     // rounded corner radius of border, 0 for none (square)
-      COLOR_ORANGE, COLOR_NAVY, // panel color, touched color
-      3U,     // rounded corner radius of border, as above
-      -3,     // border margin, <0 outside panel, >0 inside panel
-      COLOR_NAVY, COLOR_ORANGE  // border color, touched color
+      "buttons", // field text
+      1,      // text size
+      COLOR_BLACK, COLOR_RED, // text color, touched color
+      8,      // radius of rounded corners of panel, 0 for none (square)
+      COLOR_RED, COLOR_BLACK, // panel color, touched color
+      8,      // rounded corner radius of border, as above
+      -4,     // border margin, <0 outside panel, >0 inside panel
+      COLOR_ORANGE, COLOR_ORANGE  // border color, touched color
   );
   p2f3 = man->addField(
       p2,     // parent panel
-      "p2f3", // field text
-      1U,     // text size
-      COLOR_NAVY, COLOR_ORANGE, // text color, touched color
-      8U,     // rounded corner radius of border, 0 for none (square)
-      COLOR_GREEN, COLOR_RED,   // panel color, touched color
-      3U,     // rounded corner radius of border, as above
-      4,     // border margin, <0 outside panel, >0 inside panel
-      COLOR_NAVY, COLOR_ORANGE  // border color, touched color
+      "here", // field text
+      2,      // text size
+      COLOR_BLACK, COLOR_RED, // text color, touched color
+      2,      // radius of rounded corners of panel, 0 for none (square)
+      COLOR_RED, COLOR_BLACK,   // panel color, touched color
+      2,      // rounded corner radius of border, as above
+      4,      // border margin, <0 outside panel, >0 inside panel
+      COLOR_RED, COLOR_RED  // border color, touched color
+  );
+
+  // ---- PANEL 3 ----
+
+  // add one panel to the first layer
+  p3 = man->addPanel(
+      0,          // layer 0 (bottom-most)
+      140,  10,   // origin, top-left (x,y) point
+      100,  140,  // size, width and height
+      2,          // radius of rounded corners of panel, 0 for none (square)
+      COLOR_NAVY, // panel color
+      2,          // rounded corner radius of border, as above
+      0,          // border margin, <0 outside panel, >0 inside panel
+      COLOR_CYAN  // border color
+  );
+
+  p3->setAxis(LayoutAxis::Vertical);
+  p3->setMargin(8);
+  p3->setPadding(0);
+  p3->setProportional(true);
+
+  // set some callbacks
+  p3->setTouchPress(p1_press);
+
+  // ---- PANEL 3 FIELDS ----
+
+  p3f1 = man->addField(
+      p3,           // parent panel
+      "Two\nLines", // field text
+      2,            // text size
+      COLOR_CYAN,   // text color, touched color
+      6,            // radius of rounded corners of panel, 0 for none (square)
+      COLOR_NAVY    // panel color, touched color
+  );
+  p3f2 = man->addField(
+      p3,     // parent panel
+      "Button", // field text
+      2,      // text size
+      COLOR_CYAN, COLOR_NAVY, // text color, touched color
+      6,      // radius of rounded corners of panel, 0 for none (square)
+      COLOR_NAVY, COLOR_CYAN, // panel color, touched color
+      6,      // rounded corner radius of border, as above
+      0,      // border margin, <0 outside panel, >0 inside panel
+      COLOR_CYAN, COLOR_NAVY  // border color, touched color
   );
 }
 
@@ -278,29 +333,63 @@ void p1f1_end(Frame const &f, Touch const &t)
 void p1f1_press(Frame const &f, Touch const &t)
 {
   Serial.printf("p1f1_press: {%u,%u}", t.x(), t.y());
+
+  Serial.printf("p1f1_press: {%u,%u}: adding new layer\n", t.x(), t.y());
+
+  popup = man->addPanel(
+      1,
+      50, 40,
+      220, 110,
+      8,
+      COLOR_WHITE,
+      8,
+      0,
+      COLOR_WHITE
+  );
+  popup->setMargin(8);
+  popup->setPadding(0);
+
+  popupText = man->addField(
+      popup,
+      "Choose your fate\n \n \n \n",
+      2,
+      COLOR_PURPLE,
+      0,
+      COLOR_WHITE
+  );
+
+  popupSubpanel = man->addPanel(
+      1,
+      120, 100,
+      80,  40,
+      4,
+      COLOR_WHITE,
+      0,
+      0,
+      COLOR_WHITE
+  );
+
+  popupButton = man->addField(
+      popupSubpanel,
+      "OK!",
+      2,
+      COLOR_YELLOW, COLOR_PURPLE,
+      8,
+      COLOR_PURPLE, COLOR_YELLOW,
+      8,
+      0,
+      COLOR_YELLOW, COLOR_PURPLE
+  );
+
+  popupButton->setTouchPress(popupButton_press);
 }
 
 void screenTouchEnd(Screen const &s, Touch const &t)
 {
-  if (t.x() > 280) {
-    Serial.printf("screen({%u,%u}, %u): adding new layer\n", t.x(), t.y(), t.pressure());
-    // if we touch the far-right of the screen, add a panel to a new layer
-    uint8_t index = man->layerIndexTop() + 1U;
-    man->addPanel(
-        index,
-        20U + index * 20,
-        20U + index * 10,
-        75U, 20U,
-        0U,
-        COLOR_WHITE,
-        0U,
-        -6,
-        COLOR_PURPLE
-    );
-  }
-  else {
-    Serial.printf("screen({%u,%u}, %u): removing top layer\n", t.x(), t.y(), t.pressure());
-    // otherwise, we touched somewhere to the left, remove the top-most layer
-    man->layerRemoveTop();
-  }
+  Serial.printf("screen: ({%u,%u}, %u)\n", t.x(), t.y(), t.pressure());
+}
+
+void popupButton_press(Frame const &f, Touch const &t)
+{
+  man->layerRemoveTop();
 }
