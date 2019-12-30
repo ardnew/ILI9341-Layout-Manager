@@ -1,0 +1,13 @@
+{
+  "name": "ILI9341-Layout-Manager",
+  "keywords": "display, tft, lcd, graphics, spi, layout, windowmanager, touchscreen",
+  "description": "A modal framework for presenting collections of data using a scaling autolayout engine",
+  "exclude": "doc",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/ardnew/ILI9341-Layout-Manager"
+  },
+  "frameworks": "arduino",
+  "platforms": "*"
+}
