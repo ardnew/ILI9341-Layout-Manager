@@ -18,8 +18,8 @@
 #include <Adafruit_ILI9341.h>
 #include <XPT2046_Calibrated.h>
 
-#include "Primitive.h"
-#include "Layer.h"
+#include "obj/Primitive.h"
+#include "obj/Layer.h"
 
 // ------------------------------------------------------------------ defines --
 

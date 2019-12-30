@@ -12,8 +12,8 @@
 
 // ----------------------------------------------------------------- includes --
 
-#include "Primitive.h"
-#include "Frame.h"
+#include "obj/Primitive.h"
+#include "obj/Frame.h"
 
 // ------------------------------------------------------------------ defines --
 

@@ -83,7 +83,7 @@ public:
   {
     sprintf(_str, "%u.%u.%u", _major, _minor, _revision);
   }
-  inline char const *versionStr() const
+  char const *str() const
     { return _str; }
   inline bool operator==(Version const &version)
     { return _base256 == version._base256; }

@@ -9,9 +9,9 @@
 
 // ----------------------------------------------------------------- includes --
 
-#include "Panel.h"
-#include "Screen.h"
-#include "Layer.h"
+#include "obj/Panel.h"
+#include "obj/Screen.h"
+#include "obj/Layer.h"
 
 // ---------------------------------------------------------- private defines --
 

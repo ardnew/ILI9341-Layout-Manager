@@ -151,8 +151,6 @@ void initPeripherals(void)
 #endif
   Serial.begin(115200);
 
-  Serial.printf("creating layout manager\r\n");
-
   // ---- MANAGER OBJECT ----
 
   // primary object containing and organizing all components
@@ -164,6 +162,8 @@ void initPeripherals(void)
       // Both
       320, 240, Orientation::Landscape, COLOR_BLACK);
   man->setTouchEnd(screenTouchEnd);
+
+  Serial.printf("ILI9341-Layout-Manager v%s\r\n", man->version());
 
   // ---- PANEL 1 ----
 

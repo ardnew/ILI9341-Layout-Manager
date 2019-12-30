@@ -23,9 +23,9 @@ An example sketch is provided that demonstrates much of the features mentioned a
 
 The following are screenshots of the example sketch running on an Adafruit Grand Central M4. 
 
-![ilm-demo.ino - initial layout](doc/layout-1.jpg)
-![ilm-demo.ino - modal popover](doc/layout-2.jpg)
-![ilm-demo.ino - a nested button press](doc/layout-3.jpg)
+![ilm-demo.ino - initial layout](extras/layout-1.jpg)
+![ilm-demo.ino - modal popover](extras/layout-2.jpg)
+![ilm-demo.ino - a nested button press](extras/layout-3.jpg)
 
 ---
 

@@ -14,9 +14,9 @@
 
 #include <list>
 
-#include "Primitive.h"
-#include "Frame.h"
-#include "Field.h"
+#include "obj/Primitive.h"
+#include "obj/Frame.h"
+#include "obj/Field.h"
 
 // ------------------------------------------------------------------ defines --
 

@@ -19,8 +19,8 @@
 #undef max // these names we need to let it use. remove the macros beforehand.
 #endif
 
-#include "Primitive.h"
-#include "Screen.h"
+#include "obj/Primitive.h"
+#include "obj/Screen.h"
 
 // ------------------------------------------------------------------ defines --
 
@@ -38,6 +38,8 @@ class Panel;
 
 class LayoutManager {
 protected:
+  Version _VERSION = Version(VERSION_MAJ, VERSION_MIN, VERSION_REV);
+
   Screen _screen;
 
   bool initScreen() { return _screen.begin(); }
@@ -55,6 +57,7 @@ public:
         width, height, orientation, color)
   {}
 
+  char const *version() { return _VERSION.str(); }
   bool begin() { return initScreen(); }
   void draw() { _screen.draw(); }
 

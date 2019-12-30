@@ -14,7 +14,7 @@
 
 #include <Arduino.h>
 
-#include "Primitive.h"
+#include "obj/Primitive.h"
 
 // ------------------------------------------------------------------ defines --
 

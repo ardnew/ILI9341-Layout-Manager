@@ -15,8 +15,8 @@
 #include <list>
 #include <vector>
 
-#include "Primitive.h"
-#include "Panel.h"
+#include "obj/Primitive.h"
+#include "obj/Panel.h"
 
 // ------------------------------------------------------------------ defines --
 

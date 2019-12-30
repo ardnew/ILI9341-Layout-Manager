@@ -9,8 +9,8 @@
 
 // ----------------------------------------------------------------- includes --
 
-#include "Field.h"
-#include "Screen.h"
+#include "obj/Field.h"
+#include "obj/Screen.h"
 
 // ---------------------------------------------------------- private defines --
 

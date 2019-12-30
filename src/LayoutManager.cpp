@@ -10,8 +10,8 @@
 // ----------------------------------------------------------------- includes --
 
 #include "LayoutManager.h"
-#include "Layer.h"
-#include "Panel.h"
+#include "obj/Layer.h"
+#include "obj/Panel.h"
 
 // ---------------------------------------------------------- private defines --
 
