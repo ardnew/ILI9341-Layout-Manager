@@ -61,7 +61,7 @@
 
 // ----------------------------------------------------------- exported types --
 
-class Version {
+class LayoutManagerVersion {
 protected:
   constexpr static uint8_t const _strSize = 12U;
   char _str[_strSize] = { '\0' };
@@ -71,7 +71,7 @@ protected:
   uint32_t const _base256;
 
 public:
-  Version(
+  LayoutManagerVersion(
       uint8_t const major,
       uint8_t const minor,
       uint8_t const revision
@@ -85,11 +85,11 @@ public:
   }
   char const *str() const
     { return _str; }
-  inline bool operator==(Version const &version)
+  inline bool operator==(LayoutManagerVersion const &version)
     { return _base256 == version._base256; }
-  inline bool operator!=(Version const &version)
+  inline bool operator!=(LayoutManagerVersion const &version)
     { return _base256 != version._base256; }
-  inline bool operator<(Version const &version)
+  inline bool operator<(LayoutManagerVersion const &version)
     { return _base256 < version._base256; }
 };
 

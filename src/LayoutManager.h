@@ -38,7 +38,8 @@ class Panel;
 
 class LayoutManager {
 protected:
-  Version _VERSION = Version(VERSION_MAJ, VERSION_MIN, VERSION_REV);
+  LayoutManagerVersion _VERSION =
+      LayoutManagerVersion(VERSION_MAJ, VERSION_MIN, VERSION_REV);
 
   Screen _screen;
 
