@@ -81,6 +81,13 @@ public:
     _field.push_back(field);
     return &(_field.back());
   }
+  void clearFields()
+  {
+    if (!_field.empty()) {
+      _field.clear();
+      setNeedsUpdate();
+    }
+  }
 
   bool needsUpdate() const;
   void setNeedsUpdate();
