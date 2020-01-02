@@ -135,6 +135,48 @@ public:
       Color const colorBorder, Color const colorBorderTouched
   );
 
+  Field *addField(
+      Panel * const panel,
+      std::string const text,
+      uint8_t const sizeText,
+      GFXfont const * const font,
+      Color const colorText,
+      Radius const radiusCorner,
+      Color const color
+  );
+  Field *addField(
+      Panel * const panel,
+      std::string const text,
+      uint8_t const sizeText,
+      GFXfont const * const font,
+      Color const colorText, Color const colorTextTouched,
+      Radius const radiusCorner,
+      Color const color, Color const colorTouched
+  );
+  Field *addField(
+      Panel * const panel,
+      std::string const text,
+      uint8_t const sizeText,
+      GFXfont const * const font,
+      Color const colorText,
+      Radius const radiusCorner,
+      Color const color,
+      Radius const radiusBorder, int8_t const marginBorder,
+      Color const colorBorder
+  );
+  Field *addField(
+      Panel * const panel,
+      std::string const text,
+      uint8_t const sizeText,
+      GFXfont const * const font,
+      Color const colorText, Color const colorTextTouched,
+      Radius const radiusCorner,
+      Color const color, Color const colorTouched,
+      Radius const radiusBorder, int8_t const marginBorder,
+      Color const colorBorder, Color const colorBorderTouched
+  );
+
+
   uint8_t layerIndexTop() const
     { return _screen.layerIndexTop(); }
   uint8_t layerIndexNext() const

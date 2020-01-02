@@ -16,6 +16,7 @@
 #include <array>
 
 #include <Adafruit_ILI9341.h>
+#include <Adafruit_GFX.h>
 #include <XPT2046_Calibrated.h>
 
 #include "obj/Primitive.h"
@@ -148,8 +149,10 @@ public:
 
   void paintText(
       Point const &center,
+      GFXfont const *font,
       std::string const text,
       uint8_t const lineCount,
+      uint16_t const lineSpacing,
       uint8_t const sizeText,
       Color const colorText
   ) const;

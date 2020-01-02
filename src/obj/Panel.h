@@ -69,6 +69,14 @@ public:
   uint16_t padding() const { return _padding; }
   void setPadding(uint16_t const padding) { _padding = padding; }
 
+  void setLineSpacing(uint16_t const spacing)
+  {
+    if (!_field.empty()) {
+      for (auto it = _field.begin(); it != _field.end(); ++it)
+        { it->setLineSpacing(spacing); }
+    }
+  }
+
   LayoutAxis axis() const { return _axis; }
   void setAxis(LayoutAxis const axis) { _axis = axis; }
 

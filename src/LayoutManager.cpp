@@ -9,6 +9,8 @@
 
 // ----------------------------------------------------------------- includes --
 
+#include <Adafruit_GFX.h>
+
 #include "LayoutManager.h"
 #include "obj/Layer.h"
 #include "obj/Panel.h"
@@ -224,6 +226,103 @@ Field *LayoutManager::addField(
         radiusBorder, marginBorder,
         colorBorder, colorBorderTouched
     ), text, sizeText, colorText, colorTextTouched));
+  }
+  return nullptr;
+}
+
+Field *LayoutManager::addField(
+    Panel * const panel,
+    std::string const text,
+    uint8_t const sizeText,
+    GFXfont const * const font,
+    Color const colorText,
+    Radius const radiusCorner,
+    Color const colorPanel
+)
+{
+  if (nullptr != panel) {
+    return panel->addField(Field(Frame(
+        panel->frame()->layerIndex(),
+        Point(0U, 0U), // determined when drawing
+        Size(0U, 0U),  // determined when drawing
+        radiusCorner,
+        colorPanel
+    ), text, sizeText, (GFXfont * const)font, colorText));
+  }
+  return nullptr;
+}
+
+Field *LayoutManager::addField(
+    Panel * const panel,
+    std::string const text,
+    uint8_t const sizeText,
+    GFXfont const * const font,
+    Color const colorText, Color const colorTextTouched,
+    Radius const radiusCorner,
+    Color const colorPanel, Color const colorPanelTouched
+)
+{
+  if (nullptr != panel) {
+    return panel->addField(Field(Frame(
+        panel->frame()->layerIndex(),
+        Point(0U, 0U), // determined when drawing
+        Size(0U, 0U),  // determined when drawing
+        radiusCorner,
+        colorPanel, colorPanelTouched
+    ), text, sizeText, (GFXfont * const)font, colorText, colorTextTouched));
+  }
+  return nullptr;
+}
+
+Field *LayoutManager::addField(
+    Panel * const panel,
+    std::string const text,
+    uint8_t const sizeText,
+    GFXfont const * const font,
+    Color const colorText,
+    Radius const radiusCorner,
+    Color const colorPanel,
+    Radius const radiusBorder, int8_t const marginBorder,
+    Color const colorBorder
+)
+{
+  if (nullptr != panel) {
+    return panel->addField(Field(Frame(
+        panel->frame()->layerIndex(),
+        Point(0U, 0U), // determined when drawing
+        Size(0U, 0U),  // determined when drawing
+        radiusCorner,
+        colorPanel,
+        radiusBorder, marginBorder,
+        colorBorder
+    ), text, sizeText, (GFXfont * const)font, colorText));
+  }
+  return nullptr;
+
+}
+
+Field *LayoutManager::addField(
+    Panel * const panel,
+    std::string const text,
+    uint8_t const sizeText,
+    GFXfont const * const font,
+    Color const colorText, Color const colorTextTouched,
+    Radius const radiusCorner,
+    Color const colorPanel, Color const colorPanelTouched,
+    Radius const radiusBorder, int8_t const marginBorder,
+    Color const colorBorder, Color const colorBorderTouched
+)
+{
+  if (nullptr != panel) {
+    return panel->addField(Field(Frame(
+        panel->frame()->layerIndex(),
+        Point(0U, 0U), // determined when drawing
+        Size(0U, 0U),  // determined when drawing
+        radiusCorner,
+        colorPanel, colorPanelTouched,
+        radiusBorder, marginBorder,
+        colorBorder, colorBorderTouched
+    ), text, sizeText, (GFXfont * const)font, colorText, colorTextTouched));
   }
   return nullptr;
 }

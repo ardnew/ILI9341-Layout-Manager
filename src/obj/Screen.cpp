@@ -194,8 +194,10 @@ void Screen::paintFrame(
 
 void Screen::paintText(
     Point const &center,
+    GFXfont const *font,
     std::string const text,
     uint8_t const lineCount,
+    uint16_t const lineSpacing,
     uint8_t const sizeText,
     Color const colorText
 ) const
@@ -205,6 +207,12 @@ void Screen::paintText(
   uint16_t lineWidth, lineHeight;
   uint16_t textX, textY;
 
+  if (nullptr != font) {
+    tft()->setFont(font);
+  }
+  else {
+    tft()->setFont();
+  }
   tft()->setTextSize(sizeText);
   tft()->setTextColor(colorText);
 
@@ -229,8 +237,11 @@ void Screen::paintText(
 
     textX = center.x() - (uint16_t)((float)lineWidth / 2.0F + 0.5F);
     textY = center.y() - (uint16_t)(
-        (float)blockHeight / 2.0F + 0.5F
-      ) + currLine * perLineHeight;
+        (float)blockHeight / 2.0F + 0.5F + lineSpacing
+      ) + currLine * (uint16_t)(perLineHeight + (lineSpacing / 2.0F + 0.5F));
+
+    if (nullptr != font)
+      { textY += lineHeight; }
 
     tft()->setCursor(textX, textY);
     tft()->print(line.c_str());

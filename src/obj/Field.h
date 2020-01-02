@@ -12,6 +12,8 @@
 
 // ----------------------------------------------------------------- includes --
 
+#include <Adafruit_GFX.h>
+
 #include "obj/Primitive.h"
 #include "obj/Frame.h"
 
@@ -36,7 +38,9 @@ protected:
   bool _framePositioned;
   std::string _text;
   uint8_t _lineCount;
+  uint16_t _lineSpacing;
   uint8_t _sizeText;
+  GFXfont *_font;
   Color _colorText;
   Color _colorTextTouched;
 
@@ -55,10 +59,13 @@ public:
     _framePositioned(false),
     _text(),
     _lineCount(0U),
+    _lineSpacing(0U),
     _sizeText(FIELD_TEXT_SIZE_DEFAULT),
+    _font(nullptr),
     _colorText(FIELD_TEXT_COLOR_DEFAULT),
     _colorTextTouched(FIELD_TEXT_COLOR_DEFAULT)
   {}
+
   Field(
       Frame const frame,
       std::string const text,
@@ -69,12 +76,15 @@ public:
     _framePositioned(false),
     _text(text),
     _lineCount(0U),
+    _lineSpacing(0U),
     _sizeText(sizeText),
+    _font(nullptr),
     _colorText(colorText),
     _colorTextTouched(colorText)
   {
     _lineCount = lineCount(text);
   }
+
   Field(
       Frame const frame,
       std::string const text,
@@ -86,7 +96,50 @@ public:
     _framePositioned(false),
     _text(text),
     _lineCount(0U),
+    _lineSpacing(0U),
     _sizeText(sizeText),
+    _font(nullptr),
+    _colorText(colorText),
+    _colorTextTouched(colorTextTouched)
+  {
+    _lineCount = lineCount(text);
+  }
+
+  Field(
+      Frame const frame,
+      std::string const text,
+      uint8_t const sizeText,
+      GFXfont * const font,
+      Color const colorText
+  ):
+    _frame(frame),
+    _framePositioned(false),
+    _text(text),
+    _lineCount(0U),
+    _lineSpacing(0U),
+    _sizeText(sizeText),
+    _font(font),
+    _colorText(colorText),
+    _colorTextTouched(colorText)
+  {
+    _lineCount = lineCount(text);
+  }
+
+  Field(
+      Frame const frame,
+      std::string const text,
+      uint8_t const sizeText,
+      GFXfont * const font,
+      Color const colorText,
+      Color const colorTextTouched
+  ):
+    _frame(frame),
+    _framePositioned(false),
+    _text(text),
+    _lineCount(0U),
+    _lineSpacing(0U),
+    _sizeText(sizeText),
+    _font(font),
     _colorText(colorText),
     _colorTextTouched(colorTextTouched)
   {
@@ -109,9 +162,17 @@ public:
 
   uint8_t lineCount(void) const { return _lineCount; }
 
+  uint16_t lineSpacing(void) const { return _lineSpacing; }
+  void setLineSpacing(uint16_t const lineSpacing)
+    { _lineSpacing = lineSpacing; }
+
   uint8_t sizeText(void) const { return _sizeText; }
   void setSizeText(uint8_t const size)
     { _sizeText = size; _frame.setNeedsUpdate(); }
+
+  GFXfont *font(void) const { return _font; }
+  void setFont(GFXfont * const font)
+    { _font = font; _frame.setNeedsUpdate(); }
 
   Color colorText(void) const { return _colorText; }
   void setColorText(Color const color)

@@ -92,7 +92,12 @@ void Panel::draw(Screen const &screen, Touch const &touch)
                         ((float)(fieldFrame->top() + fieldFrame->bottom())
                           / 2.0F + 0.5F)
                   ),
-                  it->text(), it->lineCount(), it->sizeText(), colorText
+                  it->font(),
+                  it->text(),
+                  it->lineCount(),
+                  it->lineSpacing(),
+                  it->sizeText(),
+                  colorText
               );
             }
 
@@ -167,7 +172,12 @@ void Panel::draw(Screen const &screen, Touch const &touch)
                         ((float)(fieldFrame->top() + fieldFrame->bottom())
                           / 2.0F + 0.5F)
                   ),
-                  it->text(), it->lineCount(), it->sizeText(), colorText
+                  it->font(),
+                  it->text(),
+                  it->lineCount(),
+                  it->lineSpacing(),
+                  it->sizeText(),
+                  colorText
               );
             }
 
