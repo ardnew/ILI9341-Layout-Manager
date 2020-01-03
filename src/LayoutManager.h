@@ -26,7 +26,7 @@
 
 #define VERSION_MAJ 1
 #define VERSION_MIN 0
-#define VERSION_REV 0
+#define VERSION_REV 1
 
 // ------------------------------------------------------------------- macros --
 
@@ -199,5 +199,9 @@ public:
 // ------------------------------------------------------- exported functions --
 
 /* nothing */
+
+#undef VERSION_MAJ
+#undef VERSION_MIN
+#undef VERSION_REV
 
 #endif // __LAYOUTMANAGER_H__

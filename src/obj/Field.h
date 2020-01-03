@@ -158,7 +158,13 @@ public:
 
   std::string text(void) const { return _text; }
   void setText(std::string const text)
-    { _text = text; _lineCount = lineCount(text); _frame.setNeedsUpdate(); }
+  {
+    if (0 != _text.compare(text)) {
+      _text = text;
+      _lineCount = lineCount(text);
+      _frame.setNeedsUpdate();
+    }
+  }
 
   uint8_t lineCount(void) const { return _lineCount; }
 

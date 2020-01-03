@@ -207,12 +207,7 @@ void Screen::paintText(
   uint16_t lineWidth, lineHeight;
   uint16_t textX, textY;
 
-  if (nullptr != font) {
-    tft()->setFont(font);
-  }
-  else {
-    tft()->setFont();
-  }
+  tft()->setFont(font/* maybe nullptr */);
   tft()->setTextSize(sizeText);
   tft()->setTextColor(colorText);
 
