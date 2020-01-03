@@ -39,6 +39,7 @@ protected:
   uint16_t _padding;
   LayoutAxis _axis;
   bool _proportional;
+  bool _allowsMultipleSelection;
   std::list<Field> _field;
 
 public:
@@ -82,6 +83,10 @@ public:
 
   bool proportional() const { return _proportional; }
   void setProportional(bool proportional) { _proportional = proportional; }
+
+  bool allowsMultipleSelection() const { return _allowsMultipleSelection; }
+  void setAllowsMultipleSelection(bool const allowsMultipleSelection)
+    { _allowsMultipleSelection = allowsMultipleSelection; }
 
   uint8_t fieldCount() const { return _field.empty() ? 0U : _field.size(); }
   Field *addField(Field field)

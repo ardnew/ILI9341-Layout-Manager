@@ -102,12 +102,18 @@ bool Frame::draw(Screen const &screen, Touch const &touch)
 
     if (_touch.isTouched() && !isTouchingFrame) {
       if (!touch.isTouched()) {
+        if (!_isMomentary)
+          { _isSelected = !_isSelected; }
+        else
+          { _isSelected = false; }
         if (nullptr != _touchPress) {
           // use the last-read touch, since the current one is not touched
           _touchPress(*this, _touch);
         }
       }
       else {
+        if (_isMomentary)
+          { _isSelected = false; }
         if (nullptr != _touchEnd) {
           _touchEnd(*this, touch);
         }
@@ -115,6 +121,8 @@ bool Frame::draw(Screen const &screen, Touch const &touch)
       _update = true;
     }
     else if (!_touch.isTouched() && isTouchingFrame) {
+      if (_isMomentary)
+        { _isSelected = true; }
       if (nullptr != _touchBegin) {
         _touchBegin(*this, touch);
       }
@@ -127,21 +135,42 @@ bool Frame::draw(Screen const &screen, Touch const &touch)
   if (!_remove && _update) {
 
     if (!isTouchingFrame) {
-      if (_isBordered) {
-        screen.paintFrame(_origin, _size, _radiusCorner, _color, _radiusBorder, _marginBorder, _colorBorder);
+      if (_isMomentary || !_isSelected) {
+        if (_isBordered) {
+          screen.paintFrame(_origin, _size, _radiusCorner, _color, _radiusBorder, _marginBorder, _colorBorder);
+        }
+        else {
+          screen.paintFrame(_origin, _size, _radiusCorner, _color);
+        }
       }
       else {
-        screen.paintFrame(_origin, _size, _radiusCorner, _color);
+        if (_isBordered) {
+          screen.paintFrame(_origin, _size, _radiusCorner, _colorSelected, _radiusBorder, _marginBorder, _colorBorderSelected);
+        }
+        else {
+          screen.paintFrame(_origin, _size, _radiusCorner, _colorSelected);
+        }
       }
     }
     else {
-      if (_isBordered) {
-        screen.paintFrame(_origin, _size, _radiusCorner, _colorTouched, _radiusBorder, _marginBorder, _colorBorderTouched);
+      if (_isMomentary || !_isSelected) {
+        if (_isBordered) {
+          screen.paintFrame(_origin, _size, _radiusCorner, _colorTouched, _radiusBorder, _marginBorder, _colorBorderTouched);
+        }
+        else {
+          screen.paintFrame(_origin, _size, _radiusCorner, _colorTouched);
+        }
       }
       else {
-        screen.paintFrame(_origin, _size, _radiusCorner, _colorTouched);
+        if (_isBordered) {
+          screen.paintFrame(_origin, _size, _radiusCorner, _colorSelected, _radiusBorder, _marginBorder, _colorBorderSelected);
+        }
+        else {
+          screen.paintFrame(_origin, _size, _radiusCorner, _colorSelected);
+        }
       }
     }
+
     _update = false;
 
     return true; // performed an update

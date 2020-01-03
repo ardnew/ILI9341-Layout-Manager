@@ -43,6 +43,7 @@ protected:
   GFXfont *_font;
   Color _colorText;
   Color _colorTextTouched;
+  Color _colorTextSelected;
 
   uint8_t lineCount(std::string const s)
   {
@@ -63,7 +64,8 @@ public:
     _sizeText(FIELD_TEXT_SIZE_DEFAULT),
     _font(nullptr),
     _colorText(FIELD_TEXT_COLOR_DEFAULT),
-    _colorTextTouched(FIELD_TEXT_COLOR_DEFAULT)
+    _colorTextTouched(FIELD_TEXT_COLOR_DEFAULT),
+    _colorTextSelected(FIELD_TEXT_COLOR_DEFAULT)
   {}
 
   Field(
@@ -80,7 +82,8 @@ public:
     _sizeText(sizeText),
     _font(nullptr),
     _colorText(colorText),
-    _colorTextTouched(colorText)
+    _colorTextTouched(colorText),
+    _colorTextSelected(colorText)
   {
     _lineCount = lineCount(text);
   }
@@ -100,7 +103,8 @@ public:
     _sizeText(sizeText),
     _font(nullptr),
     _colorText(colorText),
-    _colorTextTouched(colorTextTouched)
+    _colorTextTouched(colorTextTouched),
+    _colorTextSelected(colorTextTouched)
   {
     _lineCount = lineCount(text);
   }
@@ -120,7 +124,8 @@ public:
     _sizeText(sizeText),
     _font(font),
     _colorText(colorText),
-    _colorTextTouched(colorText)
+    _colorTextTouched(colorText),
+    _colorTextSelected(colorText)
   {
     _lineCount = lineCount(text);
   }
@@ -141,7 +146,8 @@ public:
     _sizeText(sizeText),
     _font(font),
     _colorText(colorText),
-    _colorTextTouched(colorTextTouched)
+    _colorTextTouched(colorTextTouched),
+    _colorTextSelected(colorTextTouched)
   {
     _lineCount = lineCount(text);
   }
@@ -155,6 +161,15 @@ public:
     _frame.setSize(size);
     _framePositioned = true;
   }
+
+  bool isMomentary(void) const
+    { return _frame.isMomentary(); }
+  void setIsMomentary(bool const isMomentary)
+    { _frame.setIsMomentary(isMomentary); }
+  bool isSelected(void) const
+    { return _frame.isSelected(); }
+  void setIsSelected(bool const isSelected)
+    { _frame.setIsSelected(isSelected); _frame.setNeedsUpdate(); }
 
   std::string text(void) const { return _text; }
   void setText(std::string const text)
@@ -187,6 +202,10 @@ public:
   Color colorTextTouched(void) const { return _colorTextTouched; }
   void setColorTextTouched(Color const color)
     { _colorTextTouched = color; _frame.setNeedsUpdate(); }
+
+  Color colorTextSelected(void) const { return _colorTextSelected; }
+  void setColorTextSelected(Color const color)
+    { _colorTextSelected = color; _frame.setNeedsUpdate(); }
 
   void setTouchBegin(FrameTouchCallback const callback)
     { _frame.setTouchBegin(callback); }

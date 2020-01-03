@@ -47,11 +47,15 @@ protected:
   uint16_t _bottom;
   int8_t _marginBorder;
   bool _canTouch;
+  bool _isMomentary;
+  bool _isSelected;
   bool _isBordered;
   Color _color;
   Color _colorTouched;
+  Color _colorSelected;
   Color _colorBorder;
   Color _colorBorderTouched;
+  Color _colorBorderSelected;
   Radius _radiusCorner;
   Radius _radiusBorder;
   bool _update;
@@ -72,11 +76,15 @@ public:
     _bottom(0U),
     _marginBorder(0U),
     _canTouch(false),
+    _isMomentary(true),
+    _isSelected(false),
     _isBordered(false),
     _color(FRAME_COLOR_DEFAULT),
     _colorTouched(FRAME_COLOR_DEFAULT),
+    _colorSelected(FRAME_COLOR_DEFAULT),
     _colorBorder(FRAME_BORDER_COLOR_DEFAULT),
     _colorBorderTouched(FRAME_BORDER_COLOR_DEFAULT),
+    _colorBorderSelected(FRAME_BORDER_COLOR_DEFAULT),
     _radiusCorner(FRAME_CORNER_RADIUS_DEFAULT),
     _radiusBorder(FRAME_BORDER_RADIUS_DEFAULT),
     _update(false),
@@ -102,11 +110,15 @@ public:
     _bottom(origin.y() + size.height()),
     _marginBorder(0U),
     _canTouch(false),
+    _isMomentary(true),
+    _isSelected(false),
     _isBordered(false),
     _color(color),
     _colorTouched(color),
+    _colorSelected(color),
     _colorBorder(color),
     _colorBorderTouched(color),
+    _colorBorderSelected(color),
     _radiusCorner(radiusCorner),
     _radiusBorder(FRAME_BORDER_RADIUS_DEFAULT),
     _update(true),
@@ -133,11 +145,15 @@ public:
     _bottom(origin.y() + size.height()),
     _marginBorder(0U),
     _canTouch(true),
+    _isMomentary(true),
+    _isSelected(false),
     _isBordered(false),
     _color(color),
     _colorTouched(colorTouched),
+    _colorSelected(colorTouched),
     _colorBorder(FRAME_BORDER_COLOR_DEFAULT),
     _colorBorderTouched(FRAME_BORDER_COLOR_DEFAULT),
+    _colorBorderSelected(FRAME_BORDER_COLOR_DEFAULT),
     _radiusCorner(radiusCorner),
     _radiusBorder(FRAME_BORDER_RADIUS_DEFAULT),
     _update(true),
@@ -166,11 +182,15 @@ public:
     _bottom(origin.y() + size.height()),
     _marginBorder(marginBorder),
     _canTouch(false),
+    _isMomentary(true),
+    _isSelected(false),
     _isBordered(true),
     _color(color),
     _colorTouched(color),
+    _colorSelected(color),
     _colorBorder(colorBorder),
     _colorBorderTouched(colorBorder),
+    _colorBorderSelected(colorBorder),
     _radiusCorner(radiusCorner),
     _radiusBorder(radiusBorder),
     _update(true),
@@ -201,11 +221,15 @@ public:
     _bottom(origin.y() + size.height()),
     _marginBorder(marginBorder),
     _canTouch(true),
+    _isMomentary(true),
+    _isSelected(false),
     _isBordered(true),
     _color(color),
     _colorTouched(colorTouched),
+    _colorSelected(colorTouched),
     _colorBorder(colorBorder),
     _colorBorderTouched(colorBorderTouched),
+    _colorBorderSelected(colorBorderTouched),
     _radiusCorner(radiusCorner),
     _radiusBorder(radiusBorder),
     _update(true),
@@ -216,23 +240,31 @@ public:
     _touchPress(nullptr)
   {}
 
-  uint8_t layerIndex() const { return _layerIndex; }
-  Point origin() const { return _origin; }
+  uint8_t layerIndex(void) const { return _layerIndex; }
+  Point origin(void) const { return _origin; }
   void setOrigin(Point const origin);
-  Size size() const { return _size; }
+  Size size(void) const { return _size; }
   void setSize(Size const size);
-  uint16_t left() const { return _left; }
-  uint16_t right() const { return _right; }
-  uint16_t top() const { return _top; }
-  uint16_t bottom() const { return _bottom; }
-  bool canTouch() const { return _canTouch; }
-  Color color() const { return _color; }
-  Color colorTouched() const { return _colorTouched; }
-  Radius radiusCorner() const { return _radiusCorner; }
-  bool needsUpdate() const { return _update; }
-  void setNeedsUpdate() { _update = true; }
-  void setNeedsRemove() { _remove = true; }
-  Touch touch() const { return _touch; }
+  uint16_t left(void) const { return _left; }
+  uint16_t right(void) const { return _right; }
+  uint16_t top(void) const { return _top; }
+  uint16_t bottom(void) const { return _bottom; }
+  bool canTouch(void) const { return _canTouch; }
+  bool isMomentary(void) const { return _isMomentary; }
+  void setIsMomentary(bool const isMomentary) { _isMomentary = isMomentary; }
+  bool isSelected(void) const { return _isSelected; }
+  void setIsSelected(bool const isSelected) { _isSelected = isSelected; }
+  Color color(void) const { return _color; }
+  Color colorTouched(void) const { return _colorTouched; }
+  Color colorSelected(void) const { return _colorSelected; }
+  Color colorBorder(void) const { return _colorBorder; }
+  Color colorBorderTouched(void) const { return _colorBorderTouched; }
+  Color colorBorderSelected(void) const { return _colorBorderSelected; }
+  Radius radiusCorner(void) const { return _radiusCorner; }
+  bool needsUpdate(void) const { return _update; }
+  void setNeedsUpdate(void) { _update = true; }
+  void setNeedsRemove(void) { _remove = true; }
+  Touch touch(void) const { return _touch; }
   bool contains(Point const &p) const;
   bool overlaps(Frame const &f) const;
   bool covers(Frame const &f) const;

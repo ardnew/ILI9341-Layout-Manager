@@ -42,6 +42,7 @@
 void Panel::draw(Screen const &screen, Touch const &touch)
 {
   bool panelUpdate = _frame.draw(screen, touch);
+  int32_t newSelectedFieldIndex = -1;
 
   uint16_t numFields = fieldCount();
   if (numFields > 0U) {
@@ -73,13 +74,25 @@ void Panel::draw(Screen const &screen, Touch const &touch)
             Frame *fieldFrame = (Frame *)it->frame();
             if (panelUpdate)
               { fieldFrame->setNeedsUpdate(); }
+
+            bool wasSelected = it->isSelected();
             bool fieldUpdate = fieldFrame->draw(screen, touch);
+
+            // check if the user just selected this field
+            if (!wasSelected && it->isSelected())
+              { newSelectedFieldIndex = fieldIndex; }
+
             if (fieldUpdate) {
 
               Color colorText = it->colorText();
               if (fieldFrame->canTouch()) {
-                if (fieldFrame->touch().isTouched()) {
-                  colorText = it->colorTextTouched();
+                if (it->isMomentary() || !it->isSelected()) {
+                  if (fieldFrame->touch().isTouched()) {
+                    colorText = it->colorTextTouched();
+                  }
+                }
+                else {
+                  colorText = it->colorTextSelected();
                 }
               }
 
@@ -153,7 +166,14 @@ void Panel::draw(Screen const &screen, Touch const &touch)
             Frame *fieldFrame = (Frame *)it->frame();
             if (panelUpdate)
               { fieldFrame->setNeedsUpdate(); }
+
+            bool wasSelected = it->isSelected();
             bool fieldUpdate = fieldFrame->draw(screen, touch);
+
+            // check if the user just selected this field
+            if (!wasSelected && it->isSelected())
+              { newSelectedFieldIndex = fieldIndex; }
+
             if (fieldUpdate) {
 
               Color colorText = it->colorText();
@@ -189,6 +209,14 @@ void Panel::draw(Screen const &screen, Touch const &touch)
 
       default:
         break;
+    }
+  }
+
+  if (!_allowsMultipleSelection && (newSelectedFieldIndex > -1)) {
+    uint16_t index = 0U;
+    for (auto it = _field.begin(); it != _field.end(); ++index, ++it) {
+      if (index != newSelectedFieldIndex)
+        { it->setIsSelected(false); }
     }
   }
 }

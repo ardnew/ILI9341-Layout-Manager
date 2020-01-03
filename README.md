@@ -15,6 +15,7 @@
 - [x] Subclass-friendly object-oriented architecture designed for extensibility
 - [x] Supports user-defined callbacks for handling touch events on all components (including the screen itself)
 - [x] Allows providing custom font for all fields (Adafruit_GFX GFXfont)
+- [x] Momentary or persistent field selections, single and multiple-selection support
 - [ ] Fully documented source code
    - Although it is well-formatted and implemented with consistent design throughout, documentation remains an incomplete task.
 
