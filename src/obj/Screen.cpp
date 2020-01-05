@@ -207,7 +207,7 @@ void Screen::paintText(
   uint16_t lineWidth, lineHeight;
   uint16_t textX, textY;
 
-  tft()->setFont(font/* maybe nullptr */);
+  tft()->setFont(font/* maybe NULL */);
   tft()->setTextSize(sizeText);
   tft()->setTextColor(colorText);
 
@@ -235,8 +235,11 @@ void Screen::paintText(
         (float)blockHeight / 2.0F + 0.5F + lineSpacing
       ) + currLine * (uint16_t)(perLineHeight + (lineSpacing / 2.0F + 0.5F));
 
-    if (nullptr != font)
-      { textY += lineHeight; }
+    if (nullptr != font) {
+      // "6" comes from Adafruit_GFX docs -- a fixed offset applied to Y coord
+      // when calling setCursor() with a custom font
+      textY += (6U / lineCount + (perLineHeight + lineSpacing) / 2.0F + 0.5F);
+    }
 
     tft()->setCursor(textX, textY);
     tft()->print(line.c_str());

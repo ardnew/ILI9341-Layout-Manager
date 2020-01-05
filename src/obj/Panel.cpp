@@ -220,6 +220,7 @@ void Panel::draw(Screen const &screen, Touch const &touch)
     }
   }
 }
+
 bool Panel::needsUpdate() const
 {
   if (_frame.needsUpdate())

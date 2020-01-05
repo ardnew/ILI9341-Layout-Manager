@@ -169,7 +169,7 @@ public:
   bool isSelected(void) const
     { return _frame.isSelected(); }
   void setIsSelected(bool const isSelected)
-    { _frame.setIsSelected(isSelected); _frame.setNeedsUpdate(); }
+    { _frame.setIsSelected(isSelected); }
 
   std::string text(void) const { return _text; }
   void setText(std::string const text)
@@ -197,15 +197,31 @@ public:
 
   Color colorText(void) const { return _colorText; }
   void setColorText(Color const color)
-    { _colorText = color; _frame.setNeedsUpdate(); }
+    { if (color != _colorText)
+      { _colorText = color; _frame.setNeedsUpdate(); } }
 
   Color colorTextTouched(void) const { return _colorTextTouched; }
   void setColorTextTouched(Color const color)
-    { _colorTextTouched = color; _frame.setNeedsUpdate(); }
+    { if (color != _colorTextTouched)
+      { _colorTextTouched = color; _frame.setNeedsUpdate(); } }
 
   Color colorTextSelected(void) const { return _colorTextSelected; }
   void setColorTextSelected(Color const color)
-    { _colorTextSelected = color; _frame.setNeedsUpdate(); }
+    { if (color != _colorTextSelected)
+      { _colorTextSelected = color; _frame.setNeedsUpdate(); } }
+
+  void setColor(Color const color)
+    { _frame.setColor(color); }
+  void setColorTouched(Color const color)
+    { _frame.setColorTouched(color); }
+  void setColorSelected(Color const color)
+    { _frame.setColorSelected(color); }
+  void setColorBorder(Color const color)
+    { _frame.setColorBorder(color); }
+  void setColorBorderTouched(Color const color)
+    { _frame.setColorBorderTouched(color); }
+  void setColorBorderSelected(Color const color)
+    { _frame.setColorBorderSelected(color); }
 
   void setTouchBegin(FrameTouchCallback const callback)
     { _frame.setTouchBegin(callback); }

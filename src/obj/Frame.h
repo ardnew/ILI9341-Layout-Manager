@@ -253,13 +253,33 @@ public:
   bool isMomentary(void) const { return _isMomentary; }
   void setIsMomentary(bool const isMomentary) { _isMomentary = isMomentary; }
   bool isSelected(void) const { return _isSelected; }
-  void setIsSelected(bool const isSelected) { _isSelected = isSelected; }
+  void setIsSelected(bool const isSelected)
+    { if (isSelected != _isSelected)
+      { _isSelected = isSelected; setNeedsUpdate(); } }
   Color color(void) const { return _color; }
+  void setColor(Color const color)
+    { if (color != _color)
+      { _color = color; setNeedsUpdate(); } }
   Color colorTouched(void) const { return _colorTouched; }
+  void setColorTouched(Color const color)
+    { if (color != _colorTouched)
+      { _colorTouched = color; setNeedsUpdate(); } }
   Color colorSelected(void) const { return _colorSelected; }
+  void setColorSelected(Color const color)
+    { if (color != _colorSelected)
+      { _colorSelected = color; setNeedsUpdate(); } }
   Color colorBorder(void) const { return _colorBorder; }
+  void setColorBorder(Color const color)
+    { if (color != _colorBorder)
+      { _colorBorder = color; setNeedsUpdate(); } }
   Color colorBorderTouched(void) const { return _colorBorderTouched; }
+  void setColorBorderTouched(Color const color)
+    { if (color != _colorBorderTouched)
+      { _colorBorderTouched = color; setNeedsUpdate(); } }
   Color colorBorderSelected(void) const { return _colorBorderSelected; }
+  void setColorBorderSelected(Color const color)
+    { if (color != _colorBorderSelected)
+      { _colorBorderSelected = color; setNeedsUpdate(); } }
   Radius radiusCorner(void) const { return _radiusCorner; }
   bool needsUpdate(void) const { return _update; }
   void setNeedsUpdate(void) { _update = true; }
