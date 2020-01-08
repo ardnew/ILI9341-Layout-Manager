@@ -7,6 +7,7 @@
 - [x] Works with both Adafruit_ILI9341 and ILI9341_t3 (with minor modifications)
 - [x] Uses my fork [XPT2046_Calibrated](https://github.com/ardnew/XPT2046_Calibrated) for touchscreen interface
    - Provides touchscreen calibration, so you get touch coordinates translated to screen coordinates automatically
+   - Refer to [the example sketch in that library](https://github.com/ardnew/XPT2046_Calibrated/blob/master/examples/TouchCalibration/TouchCalibration.ino) for a quick-and-easy guide to calibrating your touchscreen (if needed)
 - [x] Efficient screen updates, only redrawing regions of screen that changed
 - [x] Rigorously controlled and predictable draw cycles
 - [x] Dynamic layering architecture; for, e.g., modal popovers
@@ -21,7 +22,7 @@
 
 ---
 
-An example sketch is provided that demonstrates much of the features mentioned above (and more). Please refer to it for general usage. 
+[An example sketch](examples/ilm-demo/ilm-demo.ino) is provided that demonstrates some of the features mentioned above. Please refer to it for general usage. 
 
 The following are screenshots of the example sketch running on an Adafruit Grand Central M4. 
 
