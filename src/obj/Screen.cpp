@@ -37,7 +37,7 @@ uint8_t  const LAYER_INDEX_INVALID    = 0xFF;
 
 // -------------------------------------------------------- private variables --
 
-// touchscreen calibration values. DO NOT TOUCH.
+// touchscreen calibration values. DO NOT TOUCH AFTER SETTING FOR YOUR SCREEN.
 static TS_Point const CAL_A_SCR(   13,   11 );
 static TS_Point const CAL_B_SCR(  312,  113 );
 static TS_Point const CAL_C_SCR(  167,  214 );
