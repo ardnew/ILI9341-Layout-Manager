@@ -11,6 +11,19 @@
 
 // ------------------------------------------------------------ configuration --
 
+//
+// ** IMPORTANT ** README **
+// 
+// for the touchscreen calibration to work as best as possible, you need to
+// update the 6 calibration parameters defined in obj/Screen.cpp. you can try
+// sticking with the same values I have defined, but you may have issues with
+// touch coordinates being a little off.
+//
+// to obtain these 6 calibration parameters, see the example sketch provided
+// with the XPT2046_Calibrated library. it walks you through the simple steps
+// necessary to calibrate your touch screen.
+//
+
 #define WAIT_FOR_SERIAL
 
 //#define GRAND_CENTRAL_M4
