@@ -1,7 +1,7 @@
 {
   "name": "ILI9341-Layout-Manager",
   "keywords": "display, tft, lcd, graphics, spi, layout, windowmanager, touchscreen",
-  "description": "A modal framework for presenting collections of data using a scaling autolayout engine",
+  "description": "An autolayout engine with callback support for designing and organizing buttons, text fields, and modal windows for ILI9341 chipsets",
   "exclude": "doc",
   "repository":
   {

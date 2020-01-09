@@ -15,13 +15,15 @@
 // ** IMPORTANT ** README **
 // 
 // for the touchscreen calibration to work as best as possible, you need to
-// update the 6 calibration parameters defined in obj/Screen.cpp. you can try
-// sticking with the same values I have defined, but you may have issues with
+// either (a) use the LayoutManager constructor that accepts the additional 6
+// Point objects required to construct a TS_Calibration object, or (b) update
+// the 6 calibration parameters defined in obj/Screen.cpp. you can try sticking
+// with the same values I have defined there, but you *may* have issues with
 // touch coordinates being a little off.
 //
-// to obtain these 6 calibration parameters, see the example sketch provided
-// with the XPT2046_Calibrated library. it walks you through the simple steps
-// necessary to calibrate your touch screen.
+// to obtain these 6 calibration parameters, see the example sketch named
+// TouchCalibration.ino provided with the XPT2046_Calibrated library. it walks
+// you through the simple steps necessary to calibrate your touch screen.
 //
 
 #define WAIT_FOR_SERIAL

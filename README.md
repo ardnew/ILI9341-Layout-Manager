@@ -1,5 +1,5 @@
 # ILI9341-Layout-Manager
-##### A modal framework for presenting collections of data using a scaling autolayout engine
+##### An autolayout engine with callback support for designing and organizing buttons, text fields, and modal windows for ILI9341 chipsets
 
 ---
 

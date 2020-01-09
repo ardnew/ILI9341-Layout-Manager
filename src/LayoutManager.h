@@ -26,7 +26,7 @@
 
 #define VERSION_MAJ 1
 #define VERSION_MIN 0
-#define VERSION_REV 3
+#define VERSION_REV 4
 
 // ------------------------------------------------------------------- macros --
 
@@ -56,6 +56,25 @@ public:
     _screen(
         tftCSPin, tftDCPin, tsCSPin, tsIRQPin,
         width, height, orientation, color)
+  {}
+
+  LayoutManager(
+      uint16_t const tftCSPin, uint16_t const tftDCPin,
+      uint16_t const tsCSPin, uint16_t const tsIRQPin,
+      uint16_t const width, uint16_t const height,
+      Point const calAScr, Point const calATch,
+      Point const calBScr, Point const calBTch,
+      Point const calCScr, Point const calCTch,
+      Orientation const orientation,
+      Color const color
+  ):
+    _screen(
+        tftCSPin, tftDCPin, tsCSPin, tsIRQPin,
+        width, height,
+        calAScr, calATch,
+        calBScr, calBTch,
+        calCScr, calCTch,
+        orientation, color)
   {}
 
   char const *version() { return _VERSION.str(); }

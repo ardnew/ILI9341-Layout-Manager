@@ -50,6 +50,7 @@ protected:
   uint16_t _tsIRQPin;
   uint16_t _width;
   uint16_t _height;
+  TS_Calibration _calibration;
   Orientation _orientation;
   Color _color;
   Touch _touch;
@@ -60,7 +61,7 @@ protected:
   ScreenTouchCallback _touchEnd;
 
   bool initDisplay(void);
-  bool initTouchScreen(void);
+  bool initTouchScreen(TS_Calibration const &cal);
 
   Touch touched(void);
 
@@ -92,6 +93,7 @@ public:
       uint16_t const tsIRQPin,
       uint16_t const width,
       uint16_t const height,
+      TS_Calibration const calibration,
       Orientation const orientation,
       Color const color
   ):
@@ -103,6 +105,7 @@ public:
     _tsIRQPin(tsIRQPin),
     _width(width),
     _height(height),
+    _calibration(calibration),
     _orientation(orientation),
     _color(color),
     _touch(),
@@ -115,6 +118,49 @@ public:
     for (uint8_t i = 0U; i < _MAX_LAYERS; ++i)
       { _layer[i].setIndex(i); } // index shall -never- change after this.
   }
+
+  Screen(
+      uint16_t const tftCSPin,
+      uint16_t const tftDCPin,
+      uint16_t const tsCSPin,
+      uint16_t const tsIRQPin,
+      uint16_t const width,
+      uint16_t const height,
+      Point const &calAScr, Point const &calATch,
+      Point const &calBScr, Point const &calBTch,
+      Point const &calCScr, Point const &calCTch,
+      Orientation const orientation,
+      Color const color
+  ):
+    Screen(
+        tftCSPin, tftDCPin, tsCSPin, tsIRQPin,
+        width, height, TS_Calibration(
+            TS_Point(calAScr.x(), calAScr.y()), // point A (screen)
+            TS_Point(calATch.x(), calATch.y()), // point A (touch)
+            TS_Point(calBScr.x(), calBScr.y()), // point B (screen)
+            TS_Point(calBTch.x(), calBTch.y()), // point B (touch)
+            TS_Point(calCScr.x(), calCScr.y()), // point C (screen)
+            TS_Point(calCTch.x(), calCTch.y()), // point C (touch)
+            width, height
+        ), orientation, color
+    )
+  {}
+
+  Screen(
+      uint16_t const tftCSPin,
+      uint16_t const tftDCPin,
+      uint16_t const tsCSPin,
+      uint16_t const tsIRQPin,
+      uint16_t const width,
+      uint16_t const height,
+      Orientation const orientation,
+      Color const color
+  ):
+    Screen(
+        tftCSPin, tftDCPin, tsCSPin, tsIRQPin,
+        width, height, TS_Calibration(), orientation, color
+    )
+  {}
 
   // the following two accessors return non-const references, which are
   // required when calling mutating member methods in certain contexts.

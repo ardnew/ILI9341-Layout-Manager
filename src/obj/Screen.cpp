@@ -37,7 +37,7 @@ uint8_t  const LAYER_INDEX_INVALID    = 0xFF;
 
 // -------------------------------------------------------- private variables --
 
-// touchscreen calibration values. DO NOT TOUCH AFTER SETTING FOR YOUR SCREEN.
+// default touchscreen calibration values used if none provided.
 static TS_Point const CAL_A_SCR(   13,   11 );
 static TS_Point const CAL_B_SCR(  312,  113 );
 static TS_Point const CAL_C_SCR(  167,  214 );
@@ -51,18 +51,28 @@ static TS_Point const CAL_C_TCH( 2084,  583 );
 
 // ------------------------------------------------------- exported functions --
 
-bool Screen::begin()
+bool Screen::begin(void)
 {
   if (!initDisplay())
     { return false; }
 
-  if (!initTouchScreen())
+  if (!_calibration.defined) {
+    // set default calibration values if none provided
+    _calibration = TS_Calibration(
+        CAL_A_SCR, CAL_A_TCH,
+        CAL_B_SCR, CAL_B_TCH,
+        CAL_C_SCR, CAL_C_TCH,
+        _width, _height
+    );
+  }
+
+  if (!initTouchScreen(_calibration))
     { return false; }
 
   return true;
 }
 
-void Screen::draw()
+void Screen::draw(void)
 {
   if (!_layer.empty()) {
 
@@ -328,18 +338,11 @@ bool Screen::initDisplay()
   return true;
 }
 
-bool Screen::initTouchScreen()
+bool Screen::initTouchScreen(TS_Calibration const &cal)
 {
   _ts.begin();
   _ts.setRotation((uint8_t)_orientation);
-  _ts.calibrate(
-      TS_Calibration(
-          CAL_A_SCR, CAL_A_TCH,
-          CAL_B_SCR, CAL_B_TCH,
-          CAL_C_SCR, CAL_C_TCH,
-          _width, _height
-      )
-  );
+  _ts.calibrate(cal);
   return true;
 }
 
